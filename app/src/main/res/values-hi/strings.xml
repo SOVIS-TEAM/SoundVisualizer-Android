@@ -366,5 +366,7 @@
     <string name="help_about_license">यह ऐप Apache License 2.0 के तहत उपलब्ध कराया जाता है। “आवाज़ें” टैब में आवाज़ों के नाम और समूह AudioSet ऑन्टोलॉजी पर आधारित हैं और CC BY-SA 4.0 के तहत उपलब्ध हैं (नीचे “ओपन सोर्स लाइसेंस” देखें)।</string>
     <string name="help_licenses_button">ओपन सोर्स लाइसेंस</string>
     <string name="help_licenses_title">ओपन सोर्स लाइसेंस</string>
+    <string name="help_privacy_button">गोपनीयता नीति</string>
+    <string name="help_privacy_no_browser">लिंक खोलने के लिए कोई ब्राउज़र नहीं है। गोपनीयता नीति %1$s पर है।</string>
     <string name="help_close">बंद करें</string>
 </resources>

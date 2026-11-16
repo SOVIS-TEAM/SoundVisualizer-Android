@@ -151,6 +151,8 @@ SoundVisualizer is distributed under the **Apache License 2.0**. Anyone is welco
 
 The sound groups and sound names in the Sounds tab are adaptations of the AudioSet ontology and are distributed under **CC BY-SA 4.0**. For licensing and copyright information regarding third-party libraries (ONNX Runtime, AndroidX, etc.) and the AI model used in this project, please refer to the [NOTICE](NOTICE) file.
 
+SoundVisualizer does not collect any personal information. See the [Privacy Policy](PRIVACY.md) ([on the web](https://sovis-team.github.io/en/privacy/)).
+
 <br/>
 <div align="center">
   <b>Built for Accessibility.</b>
