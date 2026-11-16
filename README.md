@@ -18,6 +18,8 @@
 
 **Real-Time Audio Visualization & AI Sound Analysis Overlay for Android**
 
+**[Website](https://sovis-team.github.io/en/) · [Demo video](https://youtu.be/Rl8BLXjoTv4) · [Download the APK](https://github.com/SOVIS-Team/SoundVisualizer-Android/releases/latest) · [Windows version](https://github.com/SOVIS-Team/SoundVisualizer-Windows)**
+
 </div>
 
 <br/>
