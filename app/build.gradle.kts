@@ -10,7 +10,7 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.example.soundvisualizer"
+        applicationId = "com.sovis.soundvisualizer"
         // AudioPlaybackCapture(내부 오디오 캡처)는 Android 10(API 29) 이상에서만 동작한다.
         minSdk = 29
         // 새 Android 의 동작 규칙(화면을 시스템 바 밑까지 그리기 등)에 맞췄다는 표시다. 설치할 수 있는 폰은 minSdk 가 정한다.

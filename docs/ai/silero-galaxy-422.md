@@ -27,13 +27,13 @@
 ## 숫자로 남기는 경로
 
 1. 개발자 모드에서 AI 기록을 켜고 화면/HUD가 보이게 유지한다. 후보 HUD에는 `~PREVIEW`가 붙고 정규 확정과 구분된다. 각 run마다 기기/OS/입력 경로/rate/variant/commit/동일 설정과 재생 목록을 적는다.
-2. 기록을 정상 종료하고 `adb pull /sdcard/Android/data/com.example.soundvisualizer/files/ai-log/ ./galaxy-baseline-또는-candidate/`로 CSV를 보관한다. 개발자 기록에는 소리 라벨이 있으므로 공유 전에 개인정보를 확인한다.
+2. 기록을 정상 종료하고 `adb pull /sdcard/Android/data/com.sovis.soundvisualizer/files/ai-log/ ./galaxy-baseline-또는-candidate/`로 CSV를 보관한다. 개발자 기록에는 소리 라벨이 있으므로 공유 전에 개인정보를 확인한다.
 3. `python3 tools/summarize_silero_latency.py galaxy-candidate/latency-해당파일.csv`를 실행한다. preview→다음 정규 Speech **draw callback 선행량** median/p95, 미관측 draw(제외), 다음 정규가 Speech 아닌 경우, expiry read, 정규 publication 간격, VAD 호출/worker 경과 시간을 출력한다. 파일별 분석이며 session/result ID가 겹친 파일을 합치지 않는다. `recording_closed=false`/dropped>0이면 손실을 명시한다.
 4. 이 값은 **후보 내 preview 선행량이지 baseline APK 대비 음향 onset→실제 화면 픽셀 개선량이 아니다**. 실제 A/B는 외부 재생음 시작과 폰 화면을 함께 찍는 고속 카메라/동기화 오디오로 재생 onset→첫 색/라벨/확정 시간을 같은 기준으로 채점한다. 60fps이면 프레임 분해능16.7ms와 오차를 보고한다. CSV의 read-return은 소리 발생 시각이 아니고 draw callback은 실제 디스플레이 표시 시각이 아니다.
 5. A/B 각각 onset→첫 색, onset→라벨, onset→정규 확정의 median/p95와 paired 차이, 개선/동일/악화/미검출 수를 보고한다. 파일 label은 의미적 onset annotation이 아니므로 근거 없이 정확도/일반화 향상을 주장하지 않는다.
 
 ## 비용/중단 기준
 
-같은 음량/경로로 무음+발화 혼합10분씩, 순서를 바꿔 측정한다. `adb shell dumpsys cpuinfo`, `adb shell dumpsys meminfo com.example.soundvisualizer`, `adb shell dumpsys thermalservice`, `adb shell dumpsys battery`를 같은 간격에 저장한다. VAD는 통상31.25회/초이고 CPU1thread의 recurrent session/리샘플링 비용이 추가된다. CSV worker wall time은 CPU 사용률이 아니다. 정규 추론 p95/화면 간격도 A/B 비교한다.
+같은 음량/경로로 무음+발화 혼합10분씩, 순서를 바꿔 측정한다. `adb shell dumpsys cpuinfo`, `adb shell dumpsys meminfo com.sovis.soundvisualizer`, `adb shell dumpsys thermalservice`, `adb shell dumpsys battery`를 같은 간격에 저장한다. VAD는 통상31.25회/초이고 CPU1thread의 recurrent session/리샘플링 비용이 추가된다. CSV worker wall time은 CPU 사용률이 아니다. 정규 추론 p95/화면 간격도 A/B 비교한다.
 
 Danger 검출 손실/지연 악화, 반복적 비인간 오표시·깜빡임, 지속적인 VAD 오류/강제중단/발열·regular p95 악화가 있으면 OFF를 유지한다. Galaxy에서 실제 표시 이득과 비용/안정성을 확인한 뒤 **사용자가 production 적용을 최종 판단**한다. 현재 진단 이득은 단순화 replay(정규25ms/보조2ms 가정)이며 실기기 수치가 아니다.
