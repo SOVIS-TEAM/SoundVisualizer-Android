@@ -142,6 +142,19 @@ jobs:
           apk=app/build/outputs/apk/release/app-arm64-v8a-release.apk
           echo "::notice title=R8::keep 규칙 ${checked}개 모두 지켜짐. 릴리스 APK $(du -h "$apk" | cut -f1)"
 
+      # 스토어에 올리는 App Bundle 은 ABI 분할 없이 만든다(#468). 분할을 끄는 조건이 깨지면 빌드가 멈추고,
+      # ABI 제한이 빠지면 32비트 ONNX 런타임(4KB 정렬)이 따라 들어간다. 두 가지를 함께 확인한다.
+      - name: 스토어용 App Bundle 빌드
+        run: |
+          ./gradlew bundleRelease
+          aab=app/build/outputs/bundle/release/app-release.aab
+          abis=$(unzip -Z1 "$aab" | sed -n 's#^base/lib/\([^/]*\)/.*#\1#p' | sort -u | tr '\n' ' ')
+          if [ "$abis" != "arm64-v8a x86_64 " ]; then
+            echo "::error title=App Bundle::ABI 가 arm64-v8a, x86_64 두 가지가 아닙니다: $abis"
+            exit 1
+          fi
+          echo "::notice title=App Bundle::ABI ${abis}· $(du -h "$aab" | cut -f1)"
+
       # 공유 키가 있는데 다른 키로 서명됐으면 실패시킨다. 덮어 설치가 안 되는 APK 를 올리지 않기 위해서다.
       - name: APK 서명 확인
         run: |

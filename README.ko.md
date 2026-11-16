@@ -151,6 +151,8 @@ SoundVisualizer는 Android 10 이상에서 돌아가는 오픈소스 APK 로 제
 
 분류 탭의 소리 묶음과 소리 이름은 AudioSet 온톨로지를 바탕으로 만든 각색물이라 **CC BY-SA 4.0** 으로 배포합니다. 사용된 서드파티 라이브러리(ONNX Runtime, AndroidX 등)와 AI 모델에 대한 저작권 및 라이선스 정보는 [NOTICE](NOTICE)에서 확인하실 수 있습니다.
 
+SoundVisualizer는 개인정보를 수집하지 않습니다. 자세한 내용은 [개인정보처리방침](PRIVACY.md)([웹에서 보기](https://sovis-team.github.io/privacy/))을 확인하세요.
+
 <br/>
 <div align="center">
   <b>Built for Accessibility.</b>
