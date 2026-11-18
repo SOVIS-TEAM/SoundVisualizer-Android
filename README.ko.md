@@ -18,7 +18,7 @@
 
 **안드로이드용 실시간 오디오 시각화 및 AI 기반 사운드 분석 오버레이**
 
-**[웹사이트](https://sovis-team.github.io/) · [소개 영상](https://youtu.be/Rl8BLXjoTv4) · [APK 받기](https://github.com/SOVIS-Team/SoundVisualizer-Android/releases/latest) · [Windows 버전](https://github.com/SOVIS-Team/SoundVisualizer-Windows) · [인스타그램](https://www.instagram.com/sovis.team/)**
+**[웹사이트](https://sovis-team.github.io/) · [소개 영상](https://youtu.be/Rl8BLXjoTv4) · [APK 받기](https://github.com/SOVIS-Team/SoundVisualizer-Android/releases/latest) · [Windows 버전](https://github.com/SOVIS-Team/SoundVisualizer-Windows) · [인스타그램](https://www.instagram.com/soundvisualizer.official/)**
 
 </div>
 
