@@ -9,7 +9,7 @@
 3. 기록을 끄고 가져온다. 실행 중 가져오면 footer가 없을 수 있다.
 
 ```bash
-adb pull /sdcard/Android/data/com.example.soundvisualizer/files/ai-log/
+adb pull /sdcard/Android/data/com.sovis.soundvisualizer/files/ai-log/
 python3 tools/summarize_ai_latency.py ai-log/latency-*.csv
 ```
 

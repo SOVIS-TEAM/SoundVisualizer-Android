@@ -3,6 +3,13 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+// 넣을 ABI. 32비트는 넣지 않는다(아래 splits 설명).
+val shippedAbis = listOf("arm64-v8a", "x86_64")
+
+// App Bundle(bundle* 작업)은 ABI 분할과 함께 만들 수 없다(issuetracker 402800800, #468).
+// 그 실행에서만 분할을 끄고, 대신 ndk.abiFilters 로 같은 ABI 목록을 건다.
+val buildingBundle = gradle.startParameter.taskNames.any { it.substringAfterLast(':').startsWith("bundle") }
+
 android {
     namespace = "com.example.soundvisualizer"
     // 어떤 API 로 컴파일할지만 정한다. 최신 androidx(core 1.19, Compose 1.12)가 37 이상을 요구한다.
@@ -10,7 +17,7 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.example.soundvisualizer"
+        applicationId = "com.sovis.soundvisualizer"
         // AudioPlaybackCapture(내부 오디오 캡처)는 Android 10(API 29) 이상에서만 동작한다.
         minSdk = 29
         // 새 Android 의 동작 규칙(화면을 시스템 바 밑까지 그리기 등)에 맞췄다는 표시다. 설치할 수 있는 폰은 minSdk 가 정한다.
@@ -18,13 +25,17 @@ android {
         // 37(Android 17)에서 이 앱에 걸리는 변경은 백그라운드 액티비티 시작(BAL) 조이기뿐이었다. 타일·알림 본문·
         // "다시 켜기" 로 여는 경로가 모두 BAL_ALLOW_NON_APP_VISIBLE_WINDOW 로 허용되는 것을 Android 17 에서 봤다(#155).
         targetSdk = 37
-        versionCode = 18
-        versionName = "1.8.4"
+        versionCode = 19
+        versionName = "1.9.0"
         buildConfigField("boolean", "AI_SILERO_PREVIEW_ENABLED",
             providers.gradleProperty("aiSileroPreview").map {
                 require(it == "true" || it == "false") { "aiSileroPreview must be true or false" }
                 it
             }.getOrElse("true"))
+
+        if (buildingBundle) {
+            ndk { abiFilters += shippedAbis }
+        }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -121,11 +132,12 @@ android {
         // .so 를 압축하지 않고 넣으므로(위 useLegacyPackaging) ABI 하나가 APK 크기에 그대로 더해지는데,
         // 하나로 합치면 폰에 필요 없는 에뮬레이터용 x86_64 ONNX 런타임까지 따라간다.
         // 32비트 ABI 는 넣지 않는다. 16KB 페이지 기기는 전부 64비트이고, 32비트 ONNX 런타임은 4KB 로만 정렬돼 있다.
-        // (ABI 분할과 ndk.abiFilters 는 함께 쓸 수 없어서 ABI 목록은 여기서만 정한다.)
+        // (ABI 분할과 ndk.abiFilters 는 함께 쓸 수 없어서, APK 는 여기서, App Bundle 은 위 defaultConfig.ndk 에서 정한다.)
         abi {
-            isEnable = true
+            // App Bundle 은 스토어가 기기에 맞는 ABI 만 골라 보내므로 분할이 필요 없다(맨 위 buildingBundle).
+            isEnable = !buildingBundle
             reset()
-            include("arm64-v8a", "x86_64")
+            include(*shippedAbis.toTypedArray())
             isUniversalApk = false
         }
     }

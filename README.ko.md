@@ -18,6 +18,8 @@
 
 **안드로이드용 실시간 오디오 시각화 및 AI 기반 사운드 분석 오버레이**
 
+**[웹사이트](https://sovis-team.github.io/) · [소개 영상](https://youtu.be/Rl8BLXjoTv4) · [APK 받기](https://github.com/SOVIS-Team/SoundVisualizer-Android/releases/latest) · [Windows 버전](https://github.com/SOVIS-Team/SoundVisualizer-Windows)**
+
 </div>
 
 <br/>
@@ -150,6 +152,8 @@ SoundVisualizer는 Android 10 이상에서 돌아가는 오픈소스 APK 로 제
 이 프로젝트는 **Apache License 2.0** 하에 배포됩니다. 누구나 코드를 사용하고 수정하여 공유할 수 있습니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 확인하세요.
 
 분류 탭의 소리 묶음과 소리 이름은 AudioSet 온톨로지를 바탕으로 만든 각색물이라 **CC BY-SA 4.0** 으로 배포합니다. 사용된 서드파티 라이브러리(ONNX Runtime, AndroidX 등)와 AI 모델에 대한 저작권 및 라이선스 정보는 [NOTICE](NOTICE)에서 확인하실 수 있습니다.
+
+SoundVisualizer는 개인정보를 수집하지 않습니다. 자세한 내용은 [개인정보처리방침](PRIVACY.md)([웹에서 보기](https://sovis-team.github.io/privacy/))을 확인하세요.
 
 <br/>
 <div align="center">

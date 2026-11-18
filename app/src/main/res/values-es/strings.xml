@@ -366,5 +366,7 @@
     <string name="help_about_license">Esta app se distribuye bajo la Apache License 2.0. Los nombres y los grupos de sonidos de la pestaña Sonidos se basan en la ontología de AudioSet y se distribuyen bajo la licencia CC BY-SA 4.0 (consulta “Licencias de código abierto” más abajo).</string>
     <string name="help_licenses_button">Licencias de código abierto</string>
     <string name="help_licenses_title">Licencias de código abierto</string>
+    <string name="help_privacy_button">Política de privacidad</string>
+    <string name="help_privacy_no_browser">No hay ningún navegador para abrir el enlace. La política de privacidad está en %1$s.</string>
     <string name="help_close">Cerrar</string>
 </resources>

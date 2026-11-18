@@ -18,6 +18,8 @@
 
 **Real-Time Audio Visualization & AI Sound Analysis Overlay for Android**
 
+**[Website](https://sovis-team.github.io/en/) · [Demo video](https://youtu.be/Rl8BLXjoTv4) · [Download the APK](https://github.com/SOVIS-Team/SoundVisualizer-Android/releases/latest) · [Windows version](https://github.com/SOVIS-Team/SoundVisualizer-Windows)**
+
 </div>
 
 <br/>
@@ -150,6 +152,8 @@ The app module contains the capture service (`AudioCaptureService`), the native 
 SoundVisualizer is distributed under the **Apache License 2.0**. Anyone is welcome to use, modify, and share the code. See the [LICENSE](LICENSE) file for more information.
 
 The sound groups and sound names in the Sounds tab are adaptations of the AudioSet ontology and are distributed under **CC BY-SA 4.0**. For licensing and copyright information regarding third-party libraries (ONNX Runtime, AndroidX, etc.) and the AI model used in this project, please refer to the [NOTICE](NOTICE) file.
+
+SoundVisualizer does not collect any personal information. See the [Privacy Policy](PRIVACY.md) ([on the web](https://sovis-team.github.io/en/privacy/)).
 
 <br/>
 <div align="center">

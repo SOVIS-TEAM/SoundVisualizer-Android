@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -194,6 +195,7 @@ fun HelpTab() {
                 ) {
                     Text(stringResource(R.string.help_licenses_button), fontSize = 15.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = AccentColor)
                 }
+                PrivacyButton()
             }
         }
         item {
@@ -203,6 +205,32 @@ fun HelpTab() {
 
     if (showLicenses) {
         LicenseDialog(onDismiss = { showLicenses = false })
+    }
+}
+
+/**
+ * 개인정보처리방침을 브라우저로 여는 버튼(#468). 앱 언어가 한국어면 한국어, 그 밖에는 영어 페이지를 연다.
+ * 브라우저가 없는 기기에서는 주소를 알려 준다.
+ */
+@Composable
+private fun PrivacyButton() {
+    val context = LocalContext.current
+    val language = LocalConfiguration.current.locales[0].language
+    val noBrowser = stringResource(R.string.help_privacy_no_browser, PrivacyLink.displayUrl(language))
+    OutlinedButton(
+        onClick = {
+            val intent = Intent(Intent.ACTION_VIEW, PrivacyLink.url(language).toUri()).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            try {
+                context.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(context, noBrowser, Toast.LENGTH_LONG).show()
+            }
+        },
+        border = BorderStroke(1.dp, AccentColor),
+        shape = RoundedCornerShape(14.dp),
+        modifier = Modifier.fillMaxWidth().padding(top = 10.dp).heightIn(min = 48.dp)
+    ) {
+        Text(stringResource(R.string.help_privacy_button), fontSize = 15.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = AccentColor)
     }
 }
 

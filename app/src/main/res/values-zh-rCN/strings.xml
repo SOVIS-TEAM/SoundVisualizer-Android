@@ -366,5 +366,7 @@
     <string name="help_about_license">本应用基于 Apache License 2.0 发布。“分类”标签页中的声音名称和分组基于 AudioSet 本体，并以 CC BY-SA 4.0 许可发布（详见下方的“开源许可”）。</string>
     <string name="help_licenses_button">开源许可</string>
     <string name="help_licenses_title">开源许可</string>
+    <string name="help_privacy_button">隐私政策</string>
+    <string name="help_privacy_no_browser">没有可以打开链接的浏览器。隐私政策位于 %1$s。</string>
     <string name="help_close">关闭</string>
 </resources>
