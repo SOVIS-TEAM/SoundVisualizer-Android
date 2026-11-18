@@ -50,7 +50,7 @@ SoundVisualizer(이하 "앱")는 팀 SOVIS가 만든 Android 앱입니다. 이 �
 ## 7. 문의
 
 - 팀 SOVIS
-- nawwhod@gmail.com
+- sovis.kr@gmail.com
 
 웹에서 보기: https://sovis-team.github.io/privacy/
 
@@ -106,6 +106,6 @@ If this policy changes, we will update this page and its effective date.
 ## 7. Contact
 
 - Team SOVIS
-- nawwhod@gmail.com
+- sovis.kr@gmail.com
 
 On the web: https://sovis-team.github.io/en/privacy/
