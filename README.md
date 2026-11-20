@@ -18,7 +18,7 @@
 
 **Real-Time Audio Visualization & AI Sound Analysis Overlay for Android**
 
-**[Website](https://sovis-team.github.io/en/) · [Demo video](https://youtu.be/Rl8BLXjoTv4) · [Download the APK](https://github.com/SOVIS-Team/SoundVisualizer-Android/releases/latest) · [Windows version](https://github.com/SOVIS-Team/SoundVisualizer-Windows) · [Instagram](https://www.instagram.com/sovis.official/)**
+**[Website](https://sovis-team.github.io/en/) · [Demo video](https://youtu.be/Rl8BLXjoTv4) · [Download the APK](https://github.com/SOVIS-Team/SoundVisualizer-Android/releases/latest) · [ONE store (Korea only)](https://m.onestore.co.kr/v2/ko-kr/app/0001013096) · [Windows version](https://github.com/SOVIS-Team/SoundVisualizer-Windows) · [Instagram](https://www.instagram.com/sovis.official/)**
 
 </div>
 
@@ -116,7 +116,7 @@ The project is rigorously engineered for high-performance, real-time background 
 
 ## 🚀 Installation & Quick Start
 
-SoundVisualizer is provided as an open-source APK for Android 10 or later.
+SoundVisualizer is provided as an open-source APK for Android 10 or later. In Korea, you can also install it from **[ONE store](https://m.onestore.co.kr/v2/ko-kr/app/0001013096)**.
 
 1. Go to the **[GitHub Releases](https://github.com/SOVIS-Team/SoundVisualizer-Android/releases)** page.
 2. Download the latest `SoundVisualizer-vX.Y.Z.apk` file to your phone and open it. Allow installing unknown apps if asked, then install.
