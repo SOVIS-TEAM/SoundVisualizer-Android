@@ -18,7 +18,7 @@
 
 **안드로이드용 실시간 오디오 시각화 및 AI 기반 사운드 분석 오버레이**
 
-**[웹사이트](https://sovis-team.github.io/) · [소개 영상](https://youtu.be/Rl8BLXjoTv4) · [APK 받기](https://github.com/SOVIS-Team/SoundVisualizer-Android/releases/latest) · [Windows 버전](https://github.com/SOVIS-Team/SoundVisualizer-Windows) · [인스타그램](https://www.instagram.com/sovis.official/)**
+**[웹사이트](https://sovis-team.github.io/) · [소개 영상](https://youtu.be/Rl8BLXjoTv4) · [APK 받기](https://github.com/SOVIS-Team/SoundVisualizer-Android/releases/latest) · [원스토어](https://m.onestore.co.kr/v2/ko-kr/app/0001013096) · [Windows 버전](https://github.com/SOVIS-Team/SoundVisualizer-Windows) · [인스타그램](https://www.instagram.com/sovis.official/)**
 
 </div>
 
@@ -116,7 +116,7 @@
 
 ## 🚀 설치 및 실행 방법
 
-SoundVisualizer는 Android 10 이상에서 돌아가는 오픈소스 APK 로 제공됩니다.
+SoundVisualizer는 Android 10 이상에서 돌아가는 오픈소스 APK 로 제공됩니다. **[원스토어](https://m.onestore.co.kr/v2/ko-kr/app/0001013096)**에서도 설치할 수 있습니다.
 
 1. **[GitHub Releases](https://github.com/SOVIS-Team/SoundVisualizer-Android/releases)** 페이지에 접속합니다.
 2. 최신 버전의 `SoundVisualizer-vX.Y.Z.apk` 파일을 휴대폰으로 다운로드해 엽니다. 알 수 없는 앱 설치를 허용하는지 물으면 허용한 뒤 설치합니다.
