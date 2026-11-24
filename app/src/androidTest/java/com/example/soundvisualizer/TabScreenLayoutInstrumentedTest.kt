@@ -56,7 +56,9 @@ import java.util.Locale
  *   찾기·거르기가 함께 붙어, 자판이 뜬 가로 화면에서 결과가 보일 자리가 없었다.
  *
  * 앱의 실제 언어와 기기의 화면 크기는 건드리지 않는다. 언어와 창 크기는 시험 안에서만 정한다(DeviceConfigurationOverride).
- * 기기 창이 정한 크기보다 작으면 dp 를 줄여 맞추므로, 어느 기기에서나 같은 배치를 본다. 기대하는 글자는 리소스에서 만든다.
+ * 기기 창이 정한 크기보다 작으면 dp 를 줄여 맞춘다. 다만 시스템 바 인셋은 기기의 Android 버전에 따라 다르게 들어와
+ * (API 35 미만은 0, 그 이상은 실제 값) 목록에 남는 높이가 기기마다 다르다. 그래서 위치를 재는 시험은 결과가 목록을 넘칠
+ * 만큼 많은 찾는 말을 쓴다(결과가 짧으면 목록이 빈 곳을 남기지 않으려 되돌아온다). 기대하는 글자는 리소스에서 만든다.
  * 탭 화면만 그리므로 튜토리얼 설정은 보지 않고, 진동이 울리는 칸은 누르지 않는다.
  */
 @RunWith(AndroidJUnit4::class)
@@ -219,8 +221,9 @@ class TabScreenLayoutInstrumentedTest {
         showClassify(DpSize(640.dp, 360.dp))
         scrollClassifyTo(STICKY_HEADER_INDEX)
         // 찾기 칸을 누르지 않고 글자만 넣는다. 자판이 뜨면 창이 그만큼 줄어 기기마다 남는 자리가 다르다.
-        // 영어 이름으로도 찾으므로 기기 언어와 상관없이 사이렌 묶음이 나오고, 결과는 위협음 구역 머리부터다.
-        rule.onNode(hasSetTextAction()).performSemanticsAction(SemanticsActions.SetText) { it(AnnotatedString("Siren")) }
+        // 영어 이름으로도 찾으므로 기기 언어와 상관없이 경보·경적 묶음(위협음)과 알람 시계 묶음이 나오고, 결과는 위협음 구역
+        // 머리부터다. 결과가 목록보다 길어야 목록이 끝에서 되돌아오지 않는다('Siren' 은 한 묶음뿐이라 API 29~34 에서 짧았다).
+        rule.onNode(hasSetTextAction()).performSemanticsAction(SemanticsActions.SetText) { it(AnnotatedString("alarm")) }
         rule.waitForIdle()
 
         val field = rule.onNode(hasSetTextAction()).fetchSemanticsNode().boundsInRoot
