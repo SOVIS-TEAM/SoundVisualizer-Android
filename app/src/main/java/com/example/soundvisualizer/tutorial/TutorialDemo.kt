@@ -107,6 +107,20 @@ private const val REFERENCE_SHORT_SIDE_DP = 411f
 /** 진동 쪽에서 폰 양옆에 진동 표시를 그릴 자리. */
 private val VIBRATION_MARK_ROOM = 26.dp
 
+/** [scene] 의 폰 그림 양옆에 비워 둘 자리. 진동 쪽만 진동 표시를 그린다. */
+private fun markRoomOf(scene: TutorialScene): Dp = if (scene == TutorialScene.Vibration) VIBRATION_MARK_ROOM else 0.dp
+
+/** 칸이 [maxWidth]×[maxHeight] 일 때 [scene] 의 폰 그림 폭. 칸의 폭(양옆 표시 자리를 뺀 폭)과 높이 가운데 먼저 닿는 쪽이 정한다. */
+private fun demoPhoneWidth(scene: TutorialScene, maxWidth: Dp, maxHeight: Dp): Dp =
+    min(min(maxWidth - markRoomOf(scene) * 2, maxHeight * PHONE_ASPECT), PHONE_MAX_WIDTH)
+
+/**
+ * 칸의 폭이 [width] 이고 높이는 넉넉할 때 [scene] 의 폰 그림 높이. 세로 화면은 이렇게 폭이 그림 크기를 정하므로
+ * 그림 칸을 이보다 조금만 높게 잡는다([portraitIllustrationHeight]).
+ */
+internal fun demoPhoneHeight(scene: TutorialScene, width: Dp): Dp =
+    demoPhoneWidth(scene, width, Dp.Infinity).coerceAtLeast(0.dp) / PHONE_ASPECT
+
 private val PhoneBodyColor = Color(0xFF101216)
 private val PhoneEdgeColor = Color(0xFF3A3F47)
 
@@ -160,8 +174,8 @@ internal fun TutorialIllustration(
     sounds: TutorialFrameFollower? = null
 ) {
     BoxWithConstraints(modifier = modifier.clearAndSetSemantics { }, contentAlignment = Alignment.Center) {
-        val markRoom = if (scene == TutorialScene.Vibration) VIBRATION_MARK_ROOM else 0.dp
-        val phoneWidth = min(min(maxWidth - markRoom * 2, maxHeight * PHONE_ASPECT), PHONE_MAX_WIDTH)
+        val markRoom = markRoomOf(scene)
+        val phoneWidth = demoPhoneWidth(scene, maxWidth, maxHeight)
         if (phoneWidth > 0.dp) {
             val phoneHeight = phoneWidth / PHONE_ASPECT
             // 폰 그림의 왼쪽·오른쪽은 실제 방향이다(왼쪽 소리는 왼쪽). 아랍어처럼 오른쪽에서 쓰는 언어에서도 뒤집지 않는다.
@@ -514,7 +528,8 @@ private fun LegendRow(@StringRes name: Int, @StringRes examples: Int, color: Col
         modifier = Modifier
             .fillMaxWidth()
             .background(if (active) CardColor else Color.Transparent, RoundedCornerShape(12.dp))
-            .padding(horizontal = 12.dp, vertical = 8.dp)
+            // 위아래 여백은 폭 360dp·높이 780dp 폰에서도 세 줄의 이름이 한 화면에 들어오게 잡았다(#488).
+            .padding(horizontal = 12.dp, vertical = 5.dp)
             // 이름과 예를 한 덩어리로 읽는다("환경음, 음악·빗소리 등 그 밖의 소리").
             .semantics(mergeDescendants = true) { }
     ) {
