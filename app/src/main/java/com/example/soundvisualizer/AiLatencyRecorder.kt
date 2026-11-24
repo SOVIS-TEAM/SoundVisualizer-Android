@@ -11,7 +11,9 @@ import java.util.concurrent.TimeUnit
 /** Paired with the existing developer recording toggle. File I/O only on its own worker. */
 object AiLatencyRecorder {
     private var recording: AiLatencyTrace.Recording? = null
-    private const val MAX_BYTES = 20L * 1024 * 1024
+
+    /** 파일 하나의 상한 20MB. 폴더 전체는 [AiLogRetention] 이 묶는다(#490). */
+    internal const val MAX_BYTES = 20L * 1024 * 1024
 
     @Synchronized fun start(context: Context, stamp: String) {
         if (recording != null) return

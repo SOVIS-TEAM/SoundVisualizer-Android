@@ -228,7 +228,10 @@ object SettingsManager {
 
     private val _developerRecord = MutableStateFlow(DEVELOPER_RECORD_DEFAULT)
 
-    /** 개발자 모드에서 AI 판정을 파일로 남길지 (#193). 개발자 모드를 꺼도 값은 남는다. */
+    /**
+     * 개발자 모드에서 AI 판정을 파일로 남길지 (#193). 개발자 모드를 꺼도 값은 남는다.
+     * 다른 기기에서 복원하면 꺼진다([dropOtherDeviceValues], #490).
+     */
     val developerRecord: StateFlow<Boolean> = _developerRecord
 
     // 켜면 오버레이를 초당 30번만 그린다. 덜 부드러운 대신 배터리를 아낀다. (VisualizerEngine.framesPerSecond)
@@ -326,7 +329,8 @@ object SettingsManager {
      * 자동 백업은 프리퍼런스 파일을 통째로 옮기고, 백업 규칙은 파일 단위라 키 하나만 뺄 수 없다. 그대로 두면
      * 새 폰에서 앱을 처음 열었을 때 "꺼졌습니다" 안내가 뜬다. 그 기기에서는 켠 적도 없는데, 소리를 못 듣는
      * 사용자에게는 "위협음 알림이 끊겼다" 는 뜻이다. 타일을 추가했는지도 기기마다 다르다. 마이크 감도도 기기의
-     * 마이크에 맞춘 값이라, 새 기기에서는 기본값에서 다시 맞추는 편이 낫다.
+     * 마이크에 맞춘 값이라, 새 기기에서는 기본값에서 다시 맞추는 편이 낫다. 개발자 기록 스위치도 끈다(#490).
+     * 기록은 켠 기기의 앱 폴더에 파일을 쌓는데, 켜진 채 옮겨 오면 새 폰에서는 켠 적도 없이 저장 공간을 쓴다.
      *
      * 색·진동·모드 같은 사용자 설정은 새 기기로 옮겨 가는 게 맞으므로 건드리지 않는다.
      * 표시가 아직 없는 예전 설치(그냥 업데이트한 경우)는 지우지 않고 표시만 남긴다. 지우면 멀쩡한 기기의 값이 사라진다.
@@ -343,6 +347,7 @@ object SettingsManager {
                 remove(KEY_LAST_UNEXPECTED_STOP_SEQ)
                 remove(KEY_TILE_ADDED)
                 remove(KEY_MIC_SENSITIVITY)
+                remove(KEY_DEVELOPER_RECORD)
             }
             putString(KEY_DEVICE_TAG, deviceTag)
         }
