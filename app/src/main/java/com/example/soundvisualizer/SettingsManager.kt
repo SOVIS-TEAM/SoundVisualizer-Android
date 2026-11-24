@@ -310,9 +310,10 @@ object SettingsManager {
      *
      * 못 읽는 드문 경우에는 예전처럼 [Build.FINGERPRINT] 로 물러난다.
      */
-    // Lint 의 HardwareIds 경고를 여기서만 끈다. 이 값을 밖으로 내보내지 않는다 — 앱 안의
-    // 프리퍼런스에 넣어 두고 "저장된 표시와 지금 표시가 같은가" 만 비교한다. 광고·분석·추적에 쓰지
-    // 않고, 서버로 보내지도 않는다. 기록 파일(#193)에도 들어가지 않는다.
+    // Lint 의 HardwareIds 경고를 여기서만 끈다. 앱 안의 프리퍼런스에 넣어 두고 "저장된 표시와 지금 표시가
+    // 같은가" 만 비교한다. 광고·분석·추적에 쓰지 않고, 앱이 서버로 보내지도 않는다. 기록 파일(#193)에도 들어가지
+    // 않는다. 다만 프리퍼런스는 백업 규칙(res/xml 의 두 파일)에 들어 있어, 설정과 함께 사용자의 기기 백업(Google 계정)과
+    // 새 기기로의 이전에는 실린다. 개인정보처리방침 3절이 이것을 밝힌다(#490).
     @android.annotation.SuppressLint("HardwareIds")
     internal fun deviceTagOf(context: Context): String =
         Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
