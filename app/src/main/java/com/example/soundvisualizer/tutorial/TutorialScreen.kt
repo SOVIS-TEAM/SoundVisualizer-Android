@@ -75,7 +75,9 @@ import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -124,6 +126,21 @@ private val COMPACT_HEIGHT = 480.dp
 
 /** 아래 한 줄에 버튼을 모두 모을 때 필요한 폭. 이보다 좁으면 낮은 화면이어도 위아래 두 줄로 둔다. */
 private val COMPACT_MIN_WIDTH = 600.dp
+
+/** 쪽의 좌우 여백. */
+private val PAGE_PADDING = 24.dp
+
+/** 세로 화면에서 그림과 글 사이의 빈칸. */
+private val ILLUSTRATION_GAP = 16.dp
+
+/** 세로 화면의 그림 칸에서 폰 그림 위아래에 남기는 여백(위와 아래를 합한 값). */
+private val ILLUSTRATION_SLACK = 8.dp
+
+/** 세로 화면에서 밀어 보는 내용 끝의 빈칸. 끝까지 밀었을 때 마지막 줄이 아래 버튼에 붙지 않게 한다. */
+private val PAGE_END_SPACE = 24.dp
+
+/** 아래에 가려진 글이 있다고 알리는 흐림의 높이. */
+internal val SCROLL_FADE_HEIGHT = 32.dp
 
 /**
  * 처음 여는 사람에게 앱이 무엇을 하는지 보여 주는 화면. 홈의 ‘튜토리얼 보기’로 다시 열 수 있다.
@@ -376,7 +393,7 @@ private val PauseIcon: ImageVector = materialIcon(name = "Filled.Pause") {
 
 /**
  * 한 쪽. 세로 화면은 그림 아래 글, 가로 화면은 그림 옆 글이다.
- * 글자를 크게 키워 한 화면을 넘으면 쪽 안에서 밀어 볼 수 있고, 아래에 더 있으면 끝을 흐리게 덮어 알린다.
+ * 작은 화면이나 큰 글꼴에서 한 화면을 넘으면 쪽 안에서 밀어 볼 수 있고, 아래에 가려진 글이 있으면 끝을 흐리게 덮어 알린다.
  * 아래 버튼과 쪽 표시는 늘 보인다.
  */
 @Composable
@@ -391,7 +408,7 @@ private fun TutorialPageContent(
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
         if (maxWidth > maxHeight) {
             Row(
-                modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp),
+                modifier = Modifier.fillMaxSize().padding(horizontal = PAGE_PADDING),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 PageIllustration(page, running, time, soundPlayer, Modifier.weight(1f).fillMaxHeight().padding(vertical = 8.dp))
@@ -401,18 +418,15 @@ private fun TutorialPageContent(
                 }
             }
         } else {
-            // 그림은 쪽 높이의 절반쯤. 글자를 크게 쓰거나 글이 긴 마지막 쪽(네 단계와 권한 안내)이면 글에 자리를 더 준다.
-            val fraction = if (LocalDensity.current.fontScale >= 1.3f || page == TutorialPage.Start) 0.34f else 0.5f
-            val illustrationHeight = (maxHeight * fraction).coerceIn(140.dp, 380.dp)
-            ScrollingText(Modifier.fillMaxSize()) {
+            val illustrationHeight = portraitIllustrationHeight(page, maxWidth, maxHeight, LocalDensity.current.fontScale)
+            ScrollingText(Modifier.fillMaxSize(), endSpace = PAGE_END_SPACE) {
                 Column(
-                    modifier = Modifier.padding(horizontal = 24.dp),
+                    modifier = Modifier.padding(horizontal = PAGE_PADDING),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     PageIllustration(page, running, time, soundPlayer, Modifier.fillMaxWidth().height(illustrationHeight))
-                    Spacer(Modifier.height(24.dp))
+                    Spacer(Modifier.height(ILLUSTRATION_GAP))
                     PageText(page, time, titleFocus)
-                    Spacer(Modifier.height(24.dp))
                 }
             }
         }
@@ -420,31 +434,64 @@ private fun TutorialPageContent(
 }
 
 /**
- * 세로로 밀어 볼 수 있는 칸. 짧으면 가운데에 두고, 길면 밀어 볼 수 있다(홈 탭과 같은 방법).
- * 아래에 가려진 글이 있으면 끝을 배경색으로 흐리게 덮어 이어진다는 것을 보여 준다.
+ * 세로 화면에서 [page] 의 그림 칸 높이.
+ *
+ * 쪽 높이의 절반쯤(140~380dp)이고, 글자를 크게 쓰거나(1.3배 이상) 글이 긴 마지막 쪽(네 단계와 권한 안내)이면 3분의 1쯤이다.
+ * 다만 가로로 눕힌 폰 그림은 칸의 폭이 크기를 정하므로(높이 = 폭 / 2.05), 칸을 그 그림 높이에 작은 여백을 더한 것보다
+ * 높게 잡지 않는다. 폭 360dp 폰에서 그림은 152dp(진동 쪽 127dp)인데 칸을 쪽 높이의 절반(약 260dp)으로 잡아, 그림 위아래가
+ * 비고 기본 글꼴에서도 종류 쪽 범례와 진동 쪽 주의 문구가 화면 아래로 밀렸다(#488).
+ *
+ * 마지막 쪽의 홈 화면 그림(세워 든 폰)은 칸 높이가 그림 폭을 정하므로 쪽 높이의 비율 그대로 둔다.
+ *
+ * @param pageWidth 쪽 폭. 그림 칸은 여기서 좌우 여백을 뺀 폭이다.
+ */
+internal fun portraitIllustrationHeight(page: TutorialPage, pageWidth: Dp, pageHeight: Dp, fontScale: Float): Dp {
+    val fraction = if (fontScale >= 1.3f || page == TutorialPage.Start) 0.34f else 0.5f
+    val byPage = (pageHeight * fraction).coerceIn(140.dp, 380.dp)
+    val scene = page.scene ?: return byPage
+    return min(byPage, demoPhoneHeight(scene, pageWidth - PAGE_PADDING * 2) + ILLUSTRATION_SLACK)
+}
+
+/**
+ * 세로로 밀어 볼 수 있는 칸. 짧으면 가운데에 두고, 길면 밀어 볼 수 있다(홈 탭과 같은 방법). 내용 끝에 [endSpace] 만큼 빈칸을 둔다.
+ * 아래에 가려진 글이 있으면 끝을 배경색으로 흐리게 덮어 이어진다는 것을 보여 준다([showsBottomFade]).
  */
 @Composable
-private fun ScrollingText(modifier: Modifier, content: @Composable () -> Unit) {
+private fun ScrollingText(modifier: Modifier, endSpace: Dp = 0.dp, content: @Composable () -> Unit) {
     val scroll = rememberScrollState()
+    val endSpacePx = with(LocalDensity.current) { endSpace.roundToPx() }
+    // 밀 때마다가 아니라 흐림을 그릴지가 바뀔 때만 다시 그린다.
+    val fade by remember(scroll, endSpacePx) {
+        derivedStateOf { showsBottomFade(scroll.value, scroll.maxValue, endSpacePx) }
+    }
     BoxWithConstraints(modifier = modifier) {
         Column(
             modifier = Modifier.fillMaxWidth().verticalScroll(scroll).heightIn(min = maxHeight),
             verticalArrangement = Arrangement.Center
         ) {
             content()
+            if (endSpace > 0.dp) Spacer(Modifier.height(endSpace))
         }
-        if (scroll.canScrollForward) {
+        if (fade) {
             // 누르는 것을 받지 않는 그림이라 아래 글을 밀어 올리는 데 방해되지 않는다.
             Box(
                 Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .height(32.dp)
+                    .height(SCROLL_FADE_HEIGHT)
                     .background(Brush.verticalGradient(listOf(Color.Transparent, BgColor)))
             )
         }
     }
 }
+
+/**
+ * 쪽 아래에 흐림을 그릴지. 흐림은 밀어 올리면 더 볼 글이 있다는 표시라, 남은 스크롤 거리([maxValue] - [value])가
+ * 내용 끝의 빈칸([endSpace])보다 클 때만 그린다. 단위는 픽셀이다.
+ *
+ * 가려진 것이 끝 빈칸뿐인데 그리면 화면 안에 다 들어온 마지막 줄이 잘린 것처럼 흐려지고, 밀어 올려도 새 글이 나오지 않는다(#488).
+ */
+internal fun showsBottomFade(value: Int, maxValue: Int, endSpace: Int): Boolean = maxValue - value > endSpace
 
 @Composable
 private fun PageIllustration(
@@ -486,7 +533,7 @@ private fun PageText(page: TutorialPage, time: MutableFloatState, titleFocus: Fo
                 val label by remember(time) {
                     derivedStateOf { TutorialScript.label(TutorialScene.Types, time.floatValue) }
                 }
-                TypeLegend(current = label, modifier = Modifier.padding(top = 16.dp))
+                TypeLegend(current = label, modifier = Modifier.padding(top = 12.dp))
             }
             TutorialPage.Vibration -> Text(
                 // 위협음을 믿고 기대기 전에 한 번은 알아야 하는 한계. 도움말의 같은 문구를 쓴다.
