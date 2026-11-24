@@ -15,7 +15,8 @@ import com.example.soundvisualizer.R
  * 영어 도움말의 '오른쪽 아래의 지구본 버튼', '왼쪽에서 네 번째 칸'이 화면과 반대가 됐다. 그래서 문구를 뒤집힌 배치에 맞춰
  * 옮긴 언어(res 의 rtl_layout 이 true)만 시스템 방향을 따르고, 나머지는 왼쪽에서 오른쪽으로 그린다.
  *
- * 대화 상자와 팝업도 이 방향을 물려받는다. 오버레이는 절대 좌표로 그려 이 값과 상관없다.
+ * 대화 상자와 팝업도 이 방향을 물려받는다. 오버레이의 그림은 절대 좌표라 상관없지만, 그 위의 개발자 HUD 는
+ * Compose 배치라 OverlayService 도 이것으로 감싼다.
  */
 @Composable
 fun ProvideAppLayoutDirection(content: @Composable () -> Unit) {
