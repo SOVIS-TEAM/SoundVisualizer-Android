@@ -2,7 +2,7 @@
 
 # SoundVisualizer 개인정보처리방침
 
-시행일: 2026년 11월 24일
+시행일: 2026년 11월 25일
 
 SoundVisualizer(이하 "앱")는 팀 SOVIS가 만든 Android 앱입니다. 이 방침은 앱이 어떤 정보를 다루는지 설명합니다.
 
@@ -58,7 +58,7 @@ SoundVisualizer(이하 "앱")는 팀 SOVIS가 만든 Android 앱입니다. 이 �
 
 # SoundVisualizer Privacy Policy
 
-Effective date: November 24, 2026
+Effective date: November 25, 2026
 
 SoundVisualizer (the "app") is an Android app made by team SOVIS. This policy explains what information the app handles.
 
