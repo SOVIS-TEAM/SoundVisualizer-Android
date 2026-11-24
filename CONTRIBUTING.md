@@ -171,7 +171,8 @@
 1. `app/src/main/res/values-xx/strings.xml`을 만듭니다. 폴더 이름은 안드로이드 리소스 규칙을 따릅니다. (예: 일본어 `values-ja`, 브라질 포르투갈어 `values-pt-rBR`, 인도네시아어 `values-in`) 분류 탭 문구는 이때 모두 넣고, `SoundGroupStringsTest`의 `VOTE_WORDS`에 그 언어의 도움말에 쓴 '투표' 낱말을, `SOUND_WORDS`에 '바꾼 소리' 수(`classify_changed_count`)에 쓴 '소리' 낱말을 더합니다.
 2. `language/AppLanguages.kt`의 목록에 태그, 폴더 이름, 그 언어로 쓴 언어 이름을 한 줄 추가합니다. 설정의 언어 선택 창에 이 순서대로 보입니다.
 3. 분류 탭의 소리 이름도 번역한다면 `values-xx/sound_names.xml`에 521개를 모두 넣습니다. (선택. 없으면 소리 이름이 영어로 보입니다.)
-4. `./gradlew testDebugUnitTest`로 확인합니다. 폴더와 목록이 어긋나면 테스트가 실패합니다.
+4. 오른쪽에서 왼쪽으로 쓰는 언어(히브리어·페르시아어 등)면 `values-xx/bools.xml`에 `<bool name="rtl_layout">true</bool>`을 두고, 도움말의 방향 표현('오른쪽 아래', '왼쪽에서 네 번째')을 뒤집힌 배치에 맞춰 옮깁니다(아랍어처럼). 이 값이 없으면 화면이 왼쪽에서 오른쪽으로 그려지고 `AppLayoutDirectionTest`가 실패합니다(#489).
+5. `./gradlew testDebugUnitTest`로 확인합니다. 폴더와 목록이 어긋나면 테스트가 실패합니다.
 
 Android 13 이상의 폰 설정 **앱 언어**에 뜨는 목록은 빌드할 때 `values-xx` 폴더에서 자동으로 만들어지므로 따로 고칠 곳이 없습니다. (기본 폴더의 언어는 `res/resources.properties`에 적혀 있습니다.)
 

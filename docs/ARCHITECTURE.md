@@ -759,6 +759,14 @@ lvl 0.14   shown Y   65ms (12/48)
 - 언어를 바꿔 액티비티가 다시 만들어져도 `MainActivity`가 보던 탭을 저장해 두어 설정 탭에 남습니다.
 - 숫자 표시는 언어와 상관없이 `Locale.US`로 형식을 맞춥니다.
 
+### 화면의 좌우 방향
+
+- 매니페스트가 `supportsRtl="true"`라, 폰 언어가 오른쪽에서 왼쪽으로 쓰는 언어(RTL)면 시스템이 화면을 뒤집습니다. RTL 번역은 아랍어뿐이고, 아랍어 문구는 뒤집힌 배치에 맞춰 옮겼습니다('왼쪽 아래의 지구본 버튼', '오른쪽에서 네 번째 칸').
+- 번역이 없는 RTL 언어(히브리어·페르시아어·우르두어) 하나만 쓰는 폰에서는 문구가 영어로 나오는데 배치만 뒤집혀, 영어 도움말의 '오른쪽 아래', '왼쪽에서 네 번째'가 화면과 반대가 됐습니다(#489). 폰의 언어 목록에 영어가 함께 있으면 시스템이 영어를 골라 처음부터 뒤집히지 않습니다.
+- 그래서 `MainActivity`와 `tile/StartVisualizerActivity`가 setContent 맨 바깥에서 방향을 정합니다(`ProvideAppLayoutDirection`). `res/values/bools.xml`의 `rtl_layout`이 false(기본)면 왼쪽에서 오른쪽으로 고정하고, true 인 언어(`values-ar`)만 시스템 방향을 따릅니다. 대화 상자와 팝업도 이 방향을 물려받습니다. 개발자 옵션의 'RTL 레이아웃 방향 강제'로는 앱 화면이 뒤집히지 않으므로, RTL 배치는 앱 언어를 아랍어로 바꿔 확인합니다.
+- RTL 언어를 번역해 넣으면 그 폴더에도 `bools.xml`을 두고 `rtl_layout`을 true 로 합니다. 지원 언어의 이름이 오른쪽에서 쓰는 글자인데 true 가 아니면 `AppLayoutDirectionTest`가 실패합니다.
+- 튜토리얼과 쉬운 설정의 폰 그림, 오버레이는 실제 좌우(왼쪽 소리는 왼쪽)를 그리므로 어느 언어에서도 뒤집지 않습니다.
+
 ### 폰 설정에 뜨는 언어 목록
 
 `app/build.gradle.kts`의 `androidResources { generateLocaleConfig = true }`로, 빌드할 때 `values-xx` 폴더를 모아 locale config(`_generated_res_locale_config.xml`)를 만들고 매니페스트의 `android:localeConfig`에 넣습니다. Android 13 이상의 폰 설정 **앱 언어**에 이 목록이 뜹니다. 폴더를 추가하면 목록도 따라 바뀌므로 따로 고칠 파일이 없습니다.
