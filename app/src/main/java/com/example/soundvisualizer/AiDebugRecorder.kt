@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * 켜면 `getExternalFilesDir()/ai-log/ai-<날짜-시각>.csv` 를 새로 열고, 끄면 닫는다. 받아 보는 법:
  * `adb pull /sdcard/Android/data/com.example.soundvisualizer/files/ai-log/`
+ * 새 회차를 열 때 폴더 전체를 상한 아래로 묶는다([AiLogRetention], #490). 오래된 파일부터 지워진다.
  *
  * **디스크는 쓰는 스레드에서만 만진다.** 부르는 곳은 오버레이의 HUD 루프(메인 스레드)라서, 거기서
  * 폴더를 확인하거나 파일을 열거나 쓰면 그리는 프레임이 밀린다. 그래서 [offer] 는 큐에 넣고 바로
@@ -143,11 +144,16 @@ object AiDebugRecorder {
     private fun write(app: Context, mine: Session) {
         // 폴더 해석까지 이 스레드에서 한다. getExternalFilesDir 은 경로 계산만 하지 않고 대상 폴더를
         // 확인하고(stat) 없으면 만든다 — 메인 스레드에서 할 일이 아니다(#208).
-        val file = File(File(app.getExternalFilesDir(null) ?: app.filesDir, DIR_NAME), "ai-${mine.stamp}.csv")
+        val dir = File(app.getExternalFilesDir(null) ?: app.filesDir, DIR_NAME)
+        val file = File(dir, "ai-${mine.stamp}.csv")
         if (session === mine) {
             currentFile = file
             Log.i(TAG, "기록 파일: ${file.absolutePath}")
         }
+        // 새 회차를 열 때 폴더 전체를 상한 아래로 묶는다(#490). 파일 하나의 상한은 회차 하나에만 걸려서, 켜 둔
+        // 기기에서는 시각화를 켤 때마다 파일이 쌓였다. 이 회차의 파일(지연 기록 포함)은 지우지 않는다.
+        val pruned = AiLogRetention.prune(dir, mine.stamp)
+        if (pruned.isNotEmpty()) Log.i(TAG, "폴더 상한을 넘어 오래된 기록 ${pruned.size}개를 지웠다: ${pruned.joinToString()}")
 
         // 파일은 **첫 줄이 올 때** 만든다.
         var writer: Writer? = null
