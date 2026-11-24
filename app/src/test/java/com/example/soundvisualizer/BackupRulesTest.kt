@@ -12,8 +12,9 @@ import javax.xml.parsers.DocumentBuilderFactory
  *
  * 규칙 파일은 두 개다. Android 11 이하는 `backup_rules.xml`(fullBackupContent)을, Android 12 이상은
  * `data_extraction_rules.xml` 을 본다. 뒤의 것은 클라우드 백업과 기기 간 이전을 절마다 따로 정한다.
- * 절이 없으면 targetSdk 31 이상 앱은 그 경로에서 포함 규칙 없이 앱 데이터 전체를 옮긴다. 그래서 기기 간 이전
- * 절이 없던 동안에는 개발자 기록 CSV 와 모델 사본까지 새 폰으로 갔다. 포함 규칙이 하나도 없는 절도 "전체" 다.
+ * 기기 간 이전 절이 없으면 targetSdk 31 이상 앱은 backup_rules.xml 도 무시하고 포함 규칙 없이 앱 데이터 전체를
+ * 옮긴다(클라우드 백업 절이 없으면 backup_rules.xml 을 쓴다). 그래서 기기 간 이전 절이 없던 동안에는 개발자
+ * 기록 CSV 와 모델 사본까지 새 폰으로 갔다. 포함 규칙이 하나도 없는 절도 "전체" 다.
  *
  * 기기 없이 리소스 파일을 읽어 막는다. 유닛 테스트는 app 모듈 폴더에서 돈다(AppWindowThemeTest 와 같다).
  */
@@ -44,7 +45,11 @@ class BackupRulesTest {
         val sections = childElements(root)
         for (name in listOf("cloud-backup", "device-transfer")) {
             assertEquals(
-                "data_extraction_rules.xml 에 <$name> 절을 하나 두세요. 없으면 그 경로는 앱 데이터 전체를 옮깁니다",
+                if (name == "device-transfer") {
+                    "data_extraction_rules.xml 에 <device-transfer> 절을 하나 두세요. 없으면 기기 간 이전이 앱 데이터 전체를 옮깁니다"
+                } else {
+                    "data_extraction_rules.xml 에 <$name> 절을 하나 두세요. 없으면 Android 12 이상 클라우드 백업이 backup_rules.xml 로 돌아갑니다"
+                },
                 1,
                 sections.count { it.tagName == name }
             )

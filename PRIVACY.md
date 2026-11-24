@@ -33,7 +33,7 @@ SoundVisualizer(이하 "앱")는 팀 SOVIS가 만든 Android 앱입니다. 이 �
 | 화면 녹화 동의 | 다른 앱이 재생하는 소리를 받기 위해 (화면 영상은 받지 않음) |
 | 다른 앱 위에 표시 | 소리를 다른 앱 화면 위에 그리기 위해 |
 | 알림 | 실행 중임을 알리고, 잠금 화면에서 위협음을 알리기 위해 |
-| 진동 | 소리를 진동으로 알리고(처음에는 위협음만 켜져 있음), 시각화가 꺼졌을 때 알리기 위해 |
+| 진동 | 소리를 진동으로 알리고(처음에는 위협음만 켜져 있음), 시각화가 저절로 꺼졌을 때 알리기 위해 |
 | 화면 켜짐 유지 | 잠금 화면 위협음 알림 때 화면을 잠깐 켜기 위해 |
 | 포그라운드 서비스 | 다른 앱을 쓰는 동안에도 소리를 계속 받기 위해 |
 
@@ -89,7 +89,7 @@ The app **does not collect any personal information.**
 | Screen recording consent | Capturing sound played by other apps (the screen image is not captured) |
 | Display over other apps | Drawing sound over other apps |
 | Notifications | Showing that the app is running, and alerting danger sounds on the lock screen |
-| Vibration | Vibrating for sounds (at first, only danger sounds are on), and alerting you when the visualizer turns off |
+| Vibration | Vibrating for sounds (at first, only danger sounds are on), and alerting you when the visualizer stops on its own |
 | Wake lock | Briefly turning on the screen for a lock-screen danger alert |
 | Foreground service | Continuing to capture sound while you use other apps |
 
