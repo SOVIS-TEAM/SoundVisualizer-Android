@@ -89,6 +89,7 @@ import com.example.soundvisualizer.CardColor
 import com.example.soundvisualizer.PAGE_SNAP_THRESHOLD
 import com.example.soundvisualizer.PrimaryTextColor
 import com.example.soundvisualizer.R
+import com.example.soundvisualizer.SHORT_WINDOW_HEIGHT
 import com.example.soundvisualizer.SecondaryTextColor
 import com.example.soundvisualizer.SettingsManager
 import com.example.soundvisualizer.rememberRestingPage
@@ -121,8 +122,9 @@ enum class TutorialPage(@StringRes val title: Int, @StringRes val body: Int?, va
 /**
  * 이 높이보다 낮으면(가로 화면 등) 위의 이전·건너뛰기 줄을 없애고 아래 한 줄에 모든 버튼을 모은다.
  * 위아래 버튼 줄이 화면의 절반을 차지하면 글을 읽을 자리가 거의 남지 않는다.
+ * 탭 화면이 낮은 창으로 보는 높이(480dp)와 같은 값을 쓴다(#487).
  */
-private val COMPACT_HEIGHT = 480.dp
+private val COMPACT_HEIGHT = SHORT_WINDOW_HEIGHT
 
 /** 아래 한 줄에 버튼을 모두 모을 때 필요한 폭. 이보다 좁으면 낮은 화면이어도 위아래 두 줄로 둔다. */
 private val COMPACT_MIN_WIDTH = 600.dp
