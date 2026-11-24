@@ -222,6 +222,8 @@
 
     <!-- Color picker -->
     <string name="color_picker_title">选择颜色</string>
+    <string name="color_picker_square_desc">颜色区域：饱和度 %1$d%%，亮度 %2$d%%。拖动即可更改。使用屏幕阅读器时，从下方的常用颜色中选择会更方便。</string>
+    <string name="color_picker_hue_desc">色相条：%1$d度。向左或向右拖动即可更改。</string>
     <string name="color_picker_presets">常用颜色</string>
     <string name="cd_preset_white">白色</string>
     <string name="cd_preset_red">红色</string>
@@ -299,7 +301,7 @@
     <string name="help_perm_capture">屏幕录制</string>
     <string name="help_perm_capture_desc">Android 仅允许应用在获得此项同意后捕获手机上的声音。不会录制您的屏幕画面。</string>
     <string name="help_perm_notification">通知（Android 13 及更高版本）</string>
-    <string name="help_perm_notification_desc">用于显示运行中的通知及其“停止”按钮。即使拒绝，应用仍可正常使用。</string>
+    <string name="help_perm_notification_desc">用于显示运行中的通知及其“停止”按钮；在您并未手动停止的情况下，声音可视化关闭时也会通知您。即使拒绝，应用仍可正常使用。在这种情况下，如果可视化关闭，就只能通过振动提醒您，打开应用后“首页”会显示可视化因何关闭。</string>
 
     <string name="help_modes_title">显示模式</string>
     <string name="help_mode_wave_desc">整个屏幕边缘会随声音大小向内推进，声音传来的一侧推进得更深。</string>
@@ -343,7 +345,7 @@
     <string name="help_faq_install_q">无法安装新版本。</string>
     <string name="help_faq_install_a">在其他地方构建的 APK 签名不同，无法在现有应用上覆盖安装。请先卸载现有应用，然后再安装。此操作会重置您的设置。</string>
     <string name="help_faq_battery_q">耗电量大吗？</string>
-    <string name="help_faq_battery_a">只在有声音时才绘制图形，安静时会进入待机状态。不过，由于需要持续捕获声音，建议您在不使用时将其关闭。</string>
+    <string name="help_faq_battery_a">只在有声音时才绘制图形，安静时会进入待机状态。屏幕关闭期间，默认会停止捕获声音。不过，由于屏幕点亮期间会持续捕获声音，建议您在不使用时将其关闭。</string>
     <string name="help_faq_battery_less_drawing">有声音时，绘制图形最耗电。在“设置”标签页“详细设置”的“电池”中开启“降低图形绘制频率”，可以减少耗电，但图形的动画会不那么流畅。</string>
     <string name="help_faq_language_q">如何更改应用语言？</string>
     <string name="help_faq_language_a">点按“首页”标签页右下角的地球图标按钮，然后选择一种语言。选择“系统默认”将跟随手机的语言。在 Android 13 及更高版本中，您也可以在手机设置的“应用语言”中更改。</string>

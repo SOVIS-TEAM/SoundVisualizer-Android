@@ -222,6 +222,8 @@
 
     <!-- Color picker -->
     <string name="color_picker_title">Wybierz kolor</string>
+    <string name="color_picker_square_desc">Pole koloru: nasycenie %1$d%%, jasność %2$d%%. Przeciągnij, aby zmienić. Z czytnikiem ekranu łatwiej wybrać jeden z popularnych kolorów poniżej.</string>
+    <string name="color_picker_hue_desc">Suwak odcienia: %1$d°. Przeciągnij w lewo lub w prawo, aby zmienić.</string>
     <string name="color_picker_presets">Popularne kolory</string>
     <string name="cd_preset_white">Biały</string>
     <string name="cd_preset_red">Czerwony</string>
@@ -299,7 +301,7 @@
     <string name="help_perm_capture">Nagrywanie ekranu</string>
     <string name="help_perm_capture_desc">Android pozwala aplikacjom przechwytywać dźwięk z telefonu tylko po udzieleniu tej zgody. Obraz ekranu nie jest przechwytywany.</string>
     <string name="help_perm_notification">Powiadomienia (Android 13 lub nowszy)</string>
-    <string name="help_perm_notification_desc">Pozwala wyświetlać powiadomienie o działaniu aplikacji z przyciskiem „Zatrzymaj”. Jeśli odmówisz, aplikacja i tak będzie działać.</string>
+    <string name="help_perm_notification_desc">Pozwala wyświetlać powiadomienie o działaniu aplikacji z przyciskiem „Zatrzymaj” i informować, gdy wizualizacja dźwięku wyłączy się bez Twojego udziału. Jeśli odmówisz, aplikacja i tak będzie działać. W takim przypadku, gdy wizualizacja się wyłączy, dowiesz się tylko z wibracji, a po otwarciu aplikacji karta „Główna” pokaże, co się wyłączyło.</string>
 
     <string name="help_modes_title">Tryby wizualizacji</string>
     <string name="help_mode_wave_desc">Cała krawędź ekranu przesuwa się do środka – tym dalej, im głośniejszy dźwięk. Po stronie, z której dochodzi dźwięk, sięga głębiej.</string>
@@ -343,7 +345,7 @@
     <string name="help_faq_install_q">Nie mogę zainstalować nowej wersji.</string>
     <string name="help_faq_install_a">Plik APK zbudowany w innym miejscu ma inny podpis, więc nie może zastąpić zainstalowanej aplikacji. Najpierw odinstaluj obecną aplikację, a potem zainstaluj nową wersję. Spowoduje to zresetowanie ustawień.</string>
     <string name="help_faq_battery_q">Czy aplikacja mocno zużywa baterię?</string>
-    <string name="help_faq_battery_a">Aplikacja rysuje grafikę tylko wtedy, gdy słychać dźwięk, a w ciszy przechodzi w stan spoczynku. Ponieważ jednak cały czas przechwytuje dźwięk, zalecamy ją wyłączać, gdy z niej nie korzystasz.</string>
+    <string name="help_faq_battery_a">Aplikacja rysuje grafikę tylko wtedy, gdy słychać dźwięk, a w ciszy przechodzi w stan spoczynku. Gdy ekran jest wyłączony, domyślnie przestaje przechwytywać dźwięk. Ponieważ jednak przy włączonym ekranie cały czas przechwytuje dźwięk, zalecamy ją wyłączać, gdy z niej nie korzystasz.</string>
     <string name="help_faq_battery_less_drawing">Gdy słychać dźwięk, najwięcej energii zużywa rysowanie grafiki. Jeśli włączysz „Rzadziej rysuj grafikę” w sekcji „Bateria” w widoku „Szczegółowe” na karcie „Ustawienia”, aplikacja będzie zużywać mniej energii, ale ruch będzie mniej płynny.</string>
     <string name="help_faq_language_q">Jak zmienić język aplikacji?</string>
     <string name="help_faq_language_a">Naciśnij przycisk z globusem w prawym dolnym rogu karty „Główna” i wybierz język. Opcja „Domyślny język systemu” sprawia, że aplikacja używa języka telefonu. W systemie Android 13 lub nowszym możesz go też zmienić w ustawieniach telefonu, w sekcji „Języki aplikacji”.</string>

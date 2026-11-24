@@ -736,6 +736,7 @@ lvl 0.14   shown Y   65ms (12/48)
 
 - 화면의 문구는 모두 `res/values*/strings.xml`에 있습니다. 기본 폴더 `values`가 **영어**이고(`res/resources.properties`의 `unqualifiedResLocale=en-US`), 한국어는 `values-ko`, 그 밖의 언어는 `values-xx`입니다.
 - 폰 언어의 폴더가 없거나 문구 하나가 빠져 있으면 안드로이드가 기본 폴더의 영어를 씁니다. 그래서 영어·한국어는 빠짐없이 두고(`StringResourcesTest`), 다른 언어는 빠져도 Lint 경고(`MissingTranslation`)로만 둡니다. 다만 분류 탭의 문구(`classify_*`·`cd_classify_*`·`sound_group_*`, `help_sound_classify_groups`)는 모든 언어에 있어야 합니다. 빠지면 그 언어의 탭에 영어 안내가 섞이므로 `SoundGroupStringsTest`가 막습니다(#349). 이 테스트는 도움말의 초인종 예시가 모든 언어에서 "새로 위협음으로 정한 소리는 투표에만 들어간다"는 단서를 붙였는지도 봅니다(6장의 알려진 한계). 묶음 이름이 구역 머리와, 새로 지은 묶음 이름이 제 묶음의 소리 이름과 같지 않은지, "바꾼 소리" 수가 소리를 센다고 적는지도 봅니다(#374). 쉬운 설정의 문구(`settings_view_*`·`easy_*`, #408)도 글을 덜 읽게 하려고 만든 화면이라 모든 언어에 있어야 하고, '자세한 설정'을 가리키는 도움말·튜토리얼 문구는 그 언어의 단추 글자를 그대로 인용해야 합니다(`EasySettingsStringsTest`).
+- 색 선택 창의 화면 읽어주기 설명(`color_picker_square_desc`·`color_picker_hue_desc`)도 모든 언어에 있어야 합니다. 빠지면 그 언어의 화면 읽어주기 사용자가 색 사각형과 색조 막대의 설명을 영어로 듣습니다. 알림 권한 설명(`help_perm_notification_desc`)과 배터리 답(`help_faq_battery_a`)은 영어에 문장이 늘 때 한국어만 따라와 16개 언어가 옛 문장으로 남은 적이 있어, 번역이 그 언어의 다른 도움말 문구보다 눈에 띄게 짧으면 실패합니다. 알림 권한 설명은 그 언어의 알림 중지 버튼과 홈 탭 이름을 그대로 씁니다(`TranslationCoverageTest`, #489).
 - 브랜드 이름(`app_name` 등)은 `values`에만 `translatable="false"`로 둡니다.
 - 지원 언어 목록은 `AppLanguages`(태그, 폴더, 그 언어로 쓴 이름)입니다. 안드로이드 코드를 쓰지 않아 JVM 테스트가 `values-xx` 폴더와 목록을 맞춰 봅니다.
 
