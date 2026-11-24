@@ -18,14 +18,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soundvisualizer.help.HelpTab
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
@@ -67,28 +76,80 @@ fun LauncherApp(
         snapshotFlow { pagerState.currentPage }.drop(1).collect { focusManager.clearFocus() }
     }
 
+    // 탭 줄은 보고 있는 쪽의 탭을 따라 밀린다(#487). 탭 이름이 긴 언어(독일어는 약 490dp)나 큰 글꼴에서는 탭 줄이 화면보다
+    // 넓은데, 예전에는 화면을 넘겨 도움말로 가도 탭 줄이 제자리라 선택 표시가 화면 밖에 있었다.
+    // 미는 거리는 탭마다 잰 폭으로 정한다([tabRowScrollTarget]). 지금 민 거리는 따지는 값에 넣지 않는다. 넣으면 손으로 탭 줄을
+    // 밀 때마다 다시 따져 되돌린다. 처음 그릴 때(화면을 돌리거나 언어를 바꿔 보던 탭으로 다시 열 때)는 바로 옮기고, 그 뒤로는
+    // 미끄러지듯 옮긴다. 연달아 넘기면 앞의 옮김은 그만두고 마지막 쪽의 탭으로 간다.
+    val tabScroll = rememberScrollState()
+    val tabWidths = remember { List(TAB_COUNT) { 0 }.toMutableStateList() }
+    val tabGap = with(LocalDensity.current) { TAB_GAP.roundToPx() }
+    LaunchedEffect(pagerState, tabScroll, tabGap) {
+        var first = true
+        snapshotFlow { Triple(pagerState.currentPage, tabWidths.toList(), tabScroll.viewportSize) }
+            .filter { (_, widths, viewport) -> viewport > 0 && widths.all { it > 0 } }
+            .collectLatest { (page, widths, viewport) ->
+                val target = tabRowScrollTarget(widths, page, tabGap, viewport, tabScroll.value)
+                try {
+                    if (first) tabScroll.scrollTo(target) else tabScroll.animateScrollTo(target)
+                } catch (e: CancellationException) {
+                    // 손가락으로 탭 줄을 미는 중이면 옮김이 거절된다(손이 먼저다). 이번 옮김만 그만두고 다음 쪽부터 다시 따라간다.
+                    // 이 효과가 끝났거나 새 쪽이 와서 멈춘 것이면 그대로 멈춘다.
+                    currentCoroutineContext().ensureActive()
+                }
+                first = false
+            }
+    }
+    // 낮은 창(가로로 든 폰 등)에서는 탭 줄의 위아래 여백을 줄여 내용이 보일 자리를 넓힌다(#487).
+    val shortWindow = isCurrentWindowShort()
+
     // 액티비티가 화면을 시스템 바 밑까지 그리므로, 탭과 내용은 상태 표시줄·내비게이션 바·카메라 구멍을 비켜 놓는다.
     // 비켜 놓은 자리에도 앱 배경색이 보이는 것은 바깥 Surface 가 창 전체를 칠하기 때문이다.
     Column(modifier = Modifier.fillMaxSize().safeDrawingPadding()) {
-        // TabRow. 번역된 탭 이름이 길어 한 줄에 다 안 들어가면 옆으로 밀어 볼 수 있게 한다.
-        // selectableGroup 은 화면 읽어주기에 "넷 중 몇 번째"를 알려준다.
+        // TabRow. 번역된 탭 이름이 길어 한 줄에 다 안 들어가면 옆으로 밀어 볼 수 있게 한다. 쪽이 바뀌면 그 탭이 보이는
+        // 자리로 따라 민다(위의 효과). selectableGroup 은 화면 읽어주기에 "넷 중 몇 번째"를 알려준다.
         //
         // 선택 표시는 액티비티가 든 값이 아니라 지금 보고 있는 쪽(currentPage)을 따른다. 밀다가 절반을
         // 넘기는 순간 밑줄이 따라오므로, 손을 떼기 전에도 어디로 가는지 보인다.
-        Row(modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).selectableGroup().padding(24.dp)) {
-            TabButton(stringResource(R.string.tab_home), pagerState.currentPage == 0) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(tabScroll)
+                .selectableGroup()
+                .padding(
+                    horizontal = TAB_GAP,
+                    vertical = if (shortWindow) TAB_ROW_SHORT_VERTICAL_PADDING else TAB_ROW_VERTICAL_PADDING
+                )
+        ) {
+            TabButton(
+                stringResource(R.string.tab_home),
+                pagerState.currentPage == 0,
+                Modifier.tabWidthInto(tabWidths, 0)
+            ) {
                 scope.launch { pagerState.animateScrollToPage(0) }
             }
-            Spacer(modifier = Modifier.width(24.dp))
-            TabButton(stringResource(R.string.tab_settings), pagerState.currentPage == 1) {
+            Spacer(modifier = Modifier.width(TAB_GAP))
+            TabButton(
+                stringResource(R.string.tab_settings),
+                pagerState.currentPage == 1,
+                Modifier.tabWidthInto(tabWidths, 1)
+            ) {
                 scope.launch { pagerState.animateScrollToPage(1) }
             }
-            Spacer(modifier = Modifier.width(24.dp))
-            TabButton(stringResource(R.string.tab_classify), pagerState.currentPage == TAB_CLASSIFY) {
+            Spacer(modifier = Modifier.width(TAB_GAP))
+            TabButton(
+                stringResource(R.string.tab_classify),
+                pagerState.currentPage == TAB_CLASSIFY,
+                Modifier.tabWidthInto(tabWidths, TAB_CLASSIFY)
+            ) {
                 scope.launch { pagerState.animateScrollToPage(TAB_CLASSIFY) }
             }
-            Spacer(modifier = Modifier.width(24.dp))
-            TabButton(stringResource(R.string.tab_help), pagerState.currentPage == TAB_HELP) {
+            Spacer(modifier = Modifier.width(TAB_GAP))
+            TabButton(
+                stringResource(R.string.tab_help),
+                pagerState.currentPage == TAB_HELP,
+                Modifier.tabWidthInto(tabWidths, TAB_HELP)
+            ) {
                 scope.launch { pagerState.animateScrollToPage(TAB_HELP) }
             }
         }
@@ -149,12 +210,68 @@ internal fun rememberRestingPage(pagerState: PagerState): IntState {
 private const val TAB_CLASSIFY = 2
 private const val TAB_HELP = 3
 
+/** 탭 줄의 양끝 여백과 탭 사이 간격. 탭 줄을 밀 거리도 이 값으로 셈한다([tabRowScrollTarget]). */
+private val TAB_GAP = 24.dp
+
+/** 탭 줄의 위아래 여백. 낮은 창([isCurrentWindowShort])에서는 줄여, 탭 줄의 높이가 96dp 에서 64dp 가 된다(#487). */
+private val TAB_ROW_VERTICAL_PADDING = 24.dp
+private val TAB_ROW_SHORT_VERTICAL_PADDING = 8.dp
+
+/** 탭의 폭을 [widths] 의 [page] 번째에 적어 둔다. 탭 줄을 따라 밀 때 쓴다. */
+private fun Modifier.tabWidthInto(widths: MutableList<Int>, page: Int): Modifier =
+    onSizeChanged { widths[page] = it.width }
+
+/**
+ * [selected] 탭이 앞뒤 여백([gap])까지 다 보이도록 탭 줄을 밀 거리(px). 이미 다 보이면 [scroll] 그대로 둔다(#487).
+ *
+ * 탭 줄은 양끝 여백과 탭 사이가 모두 [gap] 이라, 탭의 자리는 앞 탭들의 폭으로 정해진다. 거리는 탭 줄의 시작 끝(글을 시작하는
+ * 쪽, 아랍어는 오른쪽 끝)에서 잰다. 스크롤 값도 같은 끝에서 재므로 글의 방향과 상관없이 같은 계산이다.
+ * 탭이 앞뒤 여백까지 합쳐 보이는 폭([viewport])보다 넓으면(아주 큰 글꼴) 탭의 시작 쪽을 맞춘다.
+ *
+ * @param widths 탭마다의 폭
+ * @param scroll 지금 민 거리
+ */
+internal fun tabRowScrollTarget(widths: List<Int>, selected: Int, gap: Int, viewport: Int, scroll: Int): Int {
+    val maxScroll = (widths.sum() + gap * (widths.size + 1) - viewport).coerceAtLeast(0)
+    if (selected !in widths.indices) return scroll.coerceIn(0, maxScroll)
+    // 탭의 앞 여백이 시작하는 곳과 뒤 여백이 끝나는 곳.
+    val start = widths.take(selected).sumOf { it + gap }
+    val end = start + gap + widths[selected] + gap
+    val target = when {
+        end - start > viewport -> start
+        start < scroll -> start
+        end > scroll + viewport -> end - viewport
+        else -> scroll
+    }
+    return target.coerceIn(0, maxScroll)
+}
+
+/**
+ * 이 높이보다 낮은 창(가로로 든 폰, 화면 분할 등)에서는 위아래 자리를 아낀다. 튜토리얼은 위아래 버튼 줄을 아래 한 줄로 모으고,
+ * 탭 화면은 탭 줄의 위아래 여백을 줄이고 분류 탭의 거르기 줄을 위에 붙이지 않는다(#487).
+ */
+internal val SHORT_WINDOW_HEIGHT = 480.dp
+
+/** [windowHeight] 가 낮은 창인지. 높이를 아직 모르면(0) 낮지 않은 것으로 본다. 줄였다가 다시 늘리면 화면이 한 번 튄다. */
+internal fun isShortWindow(windowHeight: Dp): Boolean = windowHeight > 0.dp && windowHeight < SHORT_WINDOW_HEIGHT
+
+/**
+ * 지금 창이 낮은지([isShortWindow]). 자판이 떠서 남는 높이가 아니라 창 높이로 본다. 남는 높이로 보면 세로 화면에서도 자판을 열
+ * 때마다 낮은 창이 되어, 글자를 치는 동안 탭 줄과 분류 탭의 거르기 줄이 바뀌며 화면이 튄다. 창 높이는 색 선택 창처럼 실제 창
+ * 크기로 잰다([ColorPickerDialog]).
+ */
 @Composable
-fun TabButton(title: String, isSelected: Boolean, onClick: () -> Unit) {
+internal fun isCurrentWindowShort(): Boolean {
+    val height = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
+    return isShortWindow(height)
+}
+
+@Composable
+fun TabButton(title: String, isSelected: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Column(
         // 선택 여부가 색과 밑줄로만 보이면 화면 읽어주기 사용자는 어느 탭을 보고 있는지 알 수 없다.
         // selectable(Role.Tab) 이 "선택됨"과 탭이라는 것을 함께 읽어준다.
-        modifier = Modifier
+        modifier = modifier
             .selectable(
                 selected = isSelected,
                 // 기본 리플이 어두운 배경에서 검은 사각형처럼 번쩍인다. 탭에는 밑줄로 충분하다.
