@@ -40,11 +40,12 @@ class TutorialLayoutSourceTest {
         val phone = demo.substringAfter("private fun HomePhone(").substringBefore("\n}\n")
         assertTrue(phone.contains("fittedTitleSize(HOME_TITLE_MAX_SIZE, textRoom)"))
         assertTrue(phone.contains("fontSize = titleTextSize"))
-        assertTrue(phone.contains("homeButtonLabels(widthOf(startLabel), widthOf(stopLabel), buttonRoom)"))
+        assertTrue(phone.contains("homeButtonLabels(startLabel, stopLabel, buttonRoom, ::widthOf)"))
         // 글자를 쓰지 않는 버튼은 막대로 그린다.
-        assertTrue(phone.contains("if (showStartLabel) {"))
-        assertTrue(phone.contains("if (showStopLabel) {"))
+        assertTrue(phone.contains("if (startText != null) {"))
+        assertTrue(phone.contains("if (stopText != null) {"))
         assertEquals("버튼마다 글자 대신 그리는 막대", 2, Regex("MockLine\\(0\\.6f, ").findAll(phone).count())
-        assertFalse("버튼 글자를 두 줄로 꺾는다", phone.contains("maxLines = 2"))
+        // 두 줄은 낱말 사이에 직접 넣은 줄바꿈으로만 꺾는다(글자 단위로 꺾지 않는다).
+        assertFalse("버튼 글자를 칸 폭에서 꺾는다", phone.contains("softWrap = true"))
     }
 }

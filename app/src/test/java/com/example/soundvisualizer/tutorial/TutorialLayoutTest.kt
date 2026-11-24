@@ -50,7 +50,7 @@ class TutorialLayoutTest {
     }
 
     @Test
-    fun `글꼴이 크면 그림 칸은 쪽 높이의 3분의 1을 넘지 않는다`() {
+    fun `글꼴이 크면 그림 칸은 쪽 높이의 3분의 1을 넘지 않는다(최소 140dp)`() {
         val large = portraitIllustrationHeight(TutorialPage.Types, pageWidth, pageHeight, fontScale = 1.3f)
         assertTrue("글꼴 1.3배에서 쪽 높이의 3분의 1을 넘었다: $large", large <= pageHeight * 0.34f)
         // 쪽이 낮아 그 비율이 그림보다 낮으면 그 높이가 그림을 줄인다(그림 폭 = 칸 높이 × 2.05). 140dp 밑으로는 줄이지 않는다.
@@ -121,29 +121,40 @@ class TutorialLayoutTest {
         assertEquals("칸이 없으면 그리지 않는다", 0.dp, fittedTitleSize(13.dp, 0.dp, ::visualizerWidth))
     }
 
-    // 버튼 글자 폭(10dp 굵게): '실행' 19.4dp, '실행 종료' 41.8dp(Noto Sans CJK), 'Start' 24.4dp, 'Stop' 22.8dp(Roboto).
+    // 버튼 글자 폭(10dp 굵게): '실행' 19.4dp, '종료' 19.4dp, '실행 종료' 41.8dp(Noto Sans CJK), 'Start' 24.4dp, 'Stop' 22.8dp(Roboto).
+    private val labelWidths = mapOf("실행" to 19.4.dp, "종료" to 19.4.dp, "실행 종료" to 41.8.dp, "Start" to 24.4.dp, "Stop" to 22.8.dp)
+    private fun labelWidth(label: String): Dp = labelWidths.getValue(label)
 
     @Test
     fun `폭 360dp 폰에서는 버튼 글자가 한 줄에 들어가지 않아 두 버튼 모두 막대로 그린다`() {
         val room = homeButtonTextRoom(smallHomePhone)
         assertDp("버튼 하나의 글자 칸", 14.0.dp, room, 0.1f)
         // 예전에는 '실/행'처럼 한 글자씩 세로로 섰고, '실행 종료'는 두 줄에서 잘렸다.
-        assertEquals(false to false, homeButtonLabels(19.4.dp, 41.8.dp, room))
-        assertEquals(false to false, homeButtonLabels(24.4.dp, 22.8.dp, room))
+        assertEquals(null to null, homeButtonLabels("실행", "실행 종료", room, ::labelWidth))
+        assertEquals(null to null, homeButtonLabels("Start", "Stop", room, ::labelWidth))
     }
 
     @Test
     fun `큰 홈 화면 그림에서는 버튼 글자를 그대로 쓴다`() {
         val room = homeButtonTextRoom(170.dp)
-        assertEquals(true to true, homeButtonLabels(19.4.dp, 41.8.dp, room))
-        assertEquals(true to true, homeButtonLabels(24.4.dp, 22.8.dp, room))
+        assertEquals("실행" to "실행 종료", homeButtonLabels("실행", "실행 종료", room, ::labelWidth))
+        assertEquals("Start" to "Stop", homeButtonLabels("Start", "Stop", room, ::labelWidth))
+    }
+
+    @Test
+    fun `한 줄에 안 들어가도 낱말마다 들어가면 두 줄로 쓴다`() {
+        // 411dp 폰·가로 화면의 그림(폭 약 105dp, 글자 칸 약 23.5dp): 예전처럼 '실행 / 종료' 두 줄로 보인다.
+        val room = homeButtonTextRoom(105.dp)
+        assertEquals("실행" to "실행\n종료", homeButtonLabels("실행", "실행 종료", room, ::labelWidth))
+        // 낱말 하나가 칸보다 넓으면 막대다.
+        assertEquals(null, fittedButtonLabel("Start", room, ::labelWidth))
     }
 
     @Test
     fun `실행 종료 글자는 실행 글자가 보일 때만 쓴다`() {
         // 가로 화면의 그림(폭 약 125dp)처럼 '실행'만 들어가면 실행 버튼에만 글자를 쓴다.
-        assertEquals(true to false, homeButtonLabels(19.4.dp, 41.8.dp, homeButtonTextRoom(125.dp)))
+        assertEquals("실행" to "실행\n종료", homeButtonLabels("실행", "실행 종료", homeButtonTextRoom(125.dp), ::labelWidth))
         // 'Stop' 은 들어가도 'Start' 가 들어가지 않으면 둘 다 막대다. 실행 버튼만 비면 누를 곳을 잘못 읽는다.
-        assertEquals(false to false, homeButtonLabels(24.4.dp, 22.8.dp, 24.dp))
+        assertEquals(null to null, homeButtonLabels("Start", "Stop", 24.dp, ::labelWidth))
     }
 }

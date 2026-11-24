@@ -587,16 +587,27 @@ internal fun homeButtonTextRoom(phoneWidth: Dp): Dp = (homeTextRoom(phoneWidth) 
 internal fun fitsOnOneLine(width: Dp, room: Dp): Boolean = width <= room * TEXT_FIT
 
 /**
- * 홈 화면 그림의 실행·실행 종료 버튼에 글자를 쓸지(앞이 실행, 뒤가 실행 종료). 버튼 하나의 글자 칸 [room] 에 한 줄로
- * 들어가지 않는 글자는 쓰지 않고 막대로 그린다. 실행 종료 글자는 실행 글자를 쓸 때만 쓴다. 실행 버튼만 비고 옆 버튼에
- * 글자가 있으면 누를 곳을 잘못 읽는다.
+ * 버튼 하나에 쓸 글자. 칸 [room] 에 한 줄로 들어가면 그대로 쓰고, 낱말이 둘이고 낱말마다 한 줄에 들어가면 낱말 사이를
+ * 줄바꿈으로 바꿔 두 줄로 쓴다('실행 종료' → '실행' / '종료'). 그것도 안 되면 null 이다(막대로 그린다).
+ * 한국어의 기본 줄바꿈은 글자 단위라 그냥 줄바꿈을 켜면 '실행 종/료'로 꺾일 수 있어서 줄바꿈 자리를 직접 넣는다.
  *
- * @param startWidth 실행 글자의 폭
- * @param stopWidth 실행 종료 글자의 폭
+ * @param widthOf 한 줄로 쓸 때 글의 폭
  */
-internal fun homeButtonLabels(startWidth: Dp, stopWidth: Dp, room: Dp): Pair<Boolean, Boolean> {
-    val start = fitsOnOneLine(startWidth, room)
-    return start to (start && fitsOnOneLine(stopWidth, room))
+internal fun fittedButtonLabel(label: String, room: Dp, widthOf: (String) -> Dp): String? {
+    if (fitsOnOneLine(widthOf(label), room)) return label
+    val words = label.split(' ').filter { it.isNotEmpty() }
+    if (words.size == 2 && words.all { fitsOnOneLine(widthOf(it), room) }) return words.joinToString("\n")
+    return null
+}
+
+/**
+ * 홈 화면 그림의 실행·실행 종료 버튼에 쓸 글자(앞이 실행, 뒤가 실행 종료, null 이면 막대). 버튼 하나의 글자 칸 [room] 에
+ * 맞춰 고른다([fittedButtonLabel]). 실행 종료 글자는 실행 글자를 쓸 때만 쓴다. 실행 버튼만 비고 옆 버튼에 글자가 있으면
+ * 누를 곳을 잘못 읽는다.
+ */
+internal fun homeButtonLabels(start: String, stop: String, room: Dp, widthOf: (String) -> Dp): Pair<String?, String?> {
+    val startText = fittedButtonLabel(start, room, widthOf)
+    return startText to (if (startText != null) fittedButtonLabel(stop, room, widthOf) else null)
 }
 
 /**
@@ -638,8 +649,8 @@ internal fun HomeScreenIllustration(running: Boolean, modifier: Modifier = Modif
  *
  * - 제목은 가장 긴 낱말('Visualizer')이 한 줄에 들어가게 줄인다. 그대로 두면 폭 360dp 폰에서 'Visualiz/er'처럼 낱말
  *   중간에서 꺾이고, 낮은 화면에서는 줄이 늘어 맨 아래의 실행 버튼이 눌려 거의 사라졌다.
- * - 버튼 글자는 한 줄에 들어가지 않으면 막대로 그린다([homeButtonLabels]). 그대로 두면 '실/행'처럼 한 글자씩 세로로
- *   섰다. 막대로 그려도 실행 버튼의 자리는 둘레로 퍼지는 테두리가 가리킨다.
+ * - 버튼 글자는 한 줄에 들어가지 않으면 낱말 사이에서 두 줄로, 그것도 안 되면 막대로 그린다([homeButtonLabels]).
+ *   그대로 두면 '실/행'처럼 한 글자씩 세로로 섰다. 막대로 그려도 실행 버튼의 자리는 둘레로 퍼지는 테두리가 가리킨다.
  */
 @Composable
 private fun HomePhone(width: Dp, height: Dp, running: Boolean) {
@@ -661,11 +672,11 @@ private fun HomePhone(width: Dp, height: Dp, running: Boolean) {
     val titleTextSize = with(density) { titleSize.toSp() }
     val buttonTextSize = with(density) { HOME_BUTTON_TEXT_SIZE.toSp() }
     val buttonRoom = homeButtonTextRoom(width)
-    val (showStartLabel, showStopLabel) = remember(startLabel, stopLabel, buttonRoom, baseStyle, density, measurer) {
+    val (startText, stopText) = remember(startLabel, stopLabel, buttonRoom, baseStyle, density, measurer) {
         val style = baseStyle.copy(fontSize = buttonTextSize, fontWeight = FontWeight.Bold)
         fun widthOf(label: String): Dp =
             with(density) { measurer.measure(label, style, softWrap = false, maxLines = 1).size.width.toDp() }
-        homeButtonLabels(widthOf(startLabel), widthOf(stopLabel), buttonRoom)
+        homeButtonLabels(startLabel, stopLabel, buttonRoom, ::widthOf)
     }
     val pulse = if (running) {
         rememberInfiniteTransition(label = "start").animateFloat(
@@ -732,11 +743,11 @@ private fun HomePhone(width: Dp, height: Dp, running: Boolean) {
                         .padding(HOME_BUTTON_PADDING),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (showStartLabel) {
+                    if (startText != null) {
                         Text(
-                            startLabel,
+                            startText,
                             fontSize = buttonTextSize, lineHeight = buttonTextSize * 1.2f, fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center, color = Color.White, maxLines = 1, softWrap = false
+                            textAlign = TextAlign.Center, color = Color.White, maxLines = 2, softWrap = false
                         )
                     } else {
                         MockLine(0.6f, Color.White.copy(alpha = 0.8f))
@@ -753,11 +764,11 @@ private fun HomePhone(width: Dp, height: Dp, running: Boolean) {
                         .padding(HOME_BUTTON_PADDING),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (showStopLabel) {
+                    if (stopText != null) {
                         Text(
-                            stopLabel,
+                            stopText,
                             fontSize = buttonTextSize, lineHeight = buttonTextSize * 1.2f, fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center, color = SecondaryTextColor, maxLines = 1, softWrap = false
+                            textAlign = TextAlign.Center, color = SecondaryTextColor, maxLines = 2, softWrap = false
                         )
                     } else {
                         MockLine(0.6f, SecondaryTextColor.copy(alpha = 0.8f))
