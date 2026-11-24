@@ -222,6 +222,8 @@
 
     <!-- Color picker -->
     <string name="color_picker_title">Choisir une couleur</string>
+    <string name="color_picker_square_desc">Zone de couleur : saturation %1$d %%, luminosité %2$d %%. Faites glisser pour modifier. Avec un lecteur d\'écran, il est plus simple de choisir parmi les couleurs courantes ci-dessous.</string>
+    <string name="color_picker_hue_desc">Curseur de teinte : %1$d°. Faites glisser vers la gauche ou la droite pour modifier.</string>
     <string name="color_picker_presets">Couleurs courantes</string>
     <string name="cd_preset_white">Blanc</string>
     <string name="cd_preset_red">Rouge</string>
@@ -299,7 +301,7 @@
     <string name="help_perm_capture">Enregistrement d\'écran</string>
     <string name="help_perm_capture_desc">Android ne permet aux applications de capturer le son de votre téléphone qu\'avec cet accord. Votre écran n\'est pas capturé.</string>
     <string name="help_perm_notification">Notifications (Android 13+)</string>
-    <string name="help_perm_notification_desc">Permet d\'afficher la notification persistante avec le bouton « Arrêter ». L\'application fonctionne même si vous refusez cette autorisation.</string>
+    <string name="help_perm_notification_desc">Permet d\'afficher la notification persistante avec le bouton « Arrêter » et de vous prévenir quand la visualisation du son se désactive sans que vous l\'ayez arrêtée. L\'application fonctionne même si vous refusez cette autorisation. Dans ce cas, si la visualisation se désactive, seule la vibration vous prévient, et l\'onglet Accueil indique ce qui s\'est désactivé lorsque vous ouvrez l\'application.</string>
 
     <string name="help_modes_title">Modes visuels</string>
     <string name="help_mode_wave_desc">Tous les bords de l\'écran se resserrent vers l\'intérieur en fonction du volume sonore, et davantage du côté d\'où vient le son.</string>
@@ -343,7 +345,7 @@
     <string name="help_faq_install_q">Une nouvelle version ne s\'installe pas.</string>
     <string name="help_faq_install_a">Un APK compilé ailleurs a une signature différente et ne peut pas être installé par-dessus l\'application existante. Désinstallez d\'abord l\'application existante, puis installez la nouvelle version. Vos paramètres seront alors réinitialisés.</string>
     <string name="help_faq_battery_q">L\'application consomme-t-elle beaucoup de batterie ?</string>
-    <string name="help_faq_battery_a">Elle ne dessine que lorsqu\'il y a du son et se met en veille quand tout est silencieux. Comme elle capture le son en continu, nous vous recommandons toutefois de la désactiver quand vous ne l\'utilisez pas.</string>
+    <string name="help_faq_battery_a">Elle ne dessine que lorsqu\'il y a du son et se met en veille quand tout est silencieux. Quand l\'écran est éteint, elle arrête par défaut de capturer le son. Comme elle capture le son en continu tant que l\'écran est allumé, nous vous recommandons toutefois de la désactiver quand vous ne l\'utilisez pas.</string>
     <string name="help_faq_battery_less_drawing">Quand du son est diffusé, c\'est le dessin des graphismes qui consomme le plus d\'énergie. Si vous activez « Dessiner les graphismes moins souvent » sous « Batterie », dans la vue « Détaillé » de l\'onglet Paramètres, l\'application consomme moins, mais les mouvements sont moins fluides.</string>
     <string name="help_faq_language_q">Comment changer la langue de l\'application ?</string>
     <string name="help_faq_language_a">Appuyez sur le bouton en forme de globe en bas à droite de l\'onglet Accueil, puis choisissez une langue. Avec « Langue du système », l\'application suit la langue de votre téléphone. Sous Android 13 ou version ultérieure, vous pouvez aussi changer la langue de l\'application depuis « Langues des applis », dans les paramètres de votre téléphone.</string>

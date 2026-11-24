@@ -16,6 +16,7 @@ import com.example.soundvisualizer.R
 import com.example.soundvisualizer.SettingsManager
 import com.example.soundvisualizer.VisualizerController
 import com.example.soundvisualizer.language.AppLanguage
+import com.example.soundvisualizer.language.ProvideAppLayoutDirection
 import com.example.soundvisualizer.ui.theme.SoundVisualizerTheme
 
 /**
@@ -56,7 +57,10 @@ class StartVisualizerActivity : ComponentActivity() {
         // 회전 뒤에도 떠 있던 안내 창을 다시 그려야 하므로 아래의 재생성 검사보다 먼저 붙인다.
         setContent {
             // 안내 창만 그린다. 테마가 창의 바를 건드리지 않으므로 안내 창이 떠 있을 때만 씌울 까닭이 없다.
-            SoundVisualizerTheme { CapturePermissionDialogs(capturePermission) }
+            // 좌우 방향은 앱 화면과 같게 문구의 언어를 따른다(#489).
+            ProvideAppLayoutDirection {
+                SoundVisualizerTheme { CapturePermissionDialogs(capturePermission) }
+            }
         }
 
         // 회전 등으로 다시 만들어진 경우, 이미 띄운 권한·동의 창의 결과는 이 인스턴스로 전달된다.

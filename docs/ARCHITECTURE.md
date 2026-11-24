@@ -739,6 +739,7 @@ lvl 0.14   shown Y   65ms (12/48)
 
 - 화면의 문구는 모두 `res/values*/strings.xml`에 있습니다. 기본 폴더 `values`가 **영어**이고(`res/resources.properties`의 `unqualifiedResLocale=en-US`), 한국어는 `values-ko`, 그 밖의 언어는 `values-xx`입니다.
 - 폰 언어의 폴더가 없거나 문구 하나가 빠져 있으면 안드로이드가 기본 폴더의 영어를 씁니다. 그래서 영어·한국어는 빠짐없이 두고(`StringResourcesTest`), 다른 언어는 빠져도 Lint 경고(`MissingTranslation`)로만 둡니다. 다만 분류 탭의 문구(`classify_*`·`cd_classify_*`·`sound_group_*`, `help_sound_classify_groups`)는 모든 언어에 있어야 합니다. 빠지면 그 언어의 탭에 영어 안내가 섞이므로 `SoundGroupStringsTest`가 막습니다(#349). 이 테스트는 도움말의 초인종 예시가 모든 언어에서 "새로 위협음으로 정한 소리는 투표에만 들어간다"는 단서를 붙였는지도 봅니다(6장의 알려진 한계). 묶음 이름이 구역 머리와, 새로 지은 묶음 이름이 제 묶음의 소리 이름과 같지 않은지, "바꾼 소리" 수가 소리를 센다고 적는지도 봅니다(#374). 쉬운 설정의 문구(`settings_view_*`·`easy_*`, #408)도 글을 덜 읽게 하려고 만든 화면이라 모든 언어에 있어야 하고, '자세한 설정'을 가리키는 도움말·튜토리얼 문구는 그 언어의 단추 글자를 그대로 인용해야 합니다(`EasySettingsStringsTest`).
+- 색 선택 창의 화면 읽어주기 설명(`color_picker_square_desc`·`color_picker_hue_desc`)도 모든 언어에 있어야 합니다. 빠지면 그 언어의 화면 읽어주기 사용자가 색 사각형과 색조 막대의 설명을 영어로 듣습니다. 알림 권한 설명(`help_perm_notification_desc`)과 배터리 답(`help_faq_battery_a`)은 영어에 문장이 늘 때 한국어만 따라와 16개 언어가 옛 문장으로 남은 적이 있어, 번역이 그 언어의 다른 도움말 문구보다 눈에 띄게 짧으면 실패합니다. 알림 권한 설명은 그 언어의 알림 중지 버튼과 홈 탭 이름을 그대로 씁니다(`TranslationCoverageTest`, #489).
 - 브랜드 이름(`app_name` 등)은 `values`에만 `translatable="false"`로 둡니다.
 - 지원 언어 목록은 `AppLanguages`(태그, 폴더, 그 언어로 쓴 이름)입니다. 안드로이드 코드를 쓰지 않아 JVM 테스트가 `values-xx` 폴더와 목록을 맞춰 봅니다.
 
@@ -761,6 +762,14 @@ lvl 0.14   shown Y   65ms (12/48)
 - 언어를 바꿔 액티비티가 다시 만들어져도 `MainActivity`가 보던 탭을 저장해 두어 설정 탭에 남습니다.
 - 숫자 표시는 언어와 상관없이 `Locale.US`로 형식을 맞춥니다.
 
+### 화면의 좌우 방향
+
+- 매니페스트가 `supportsRtl="true"`라, 폰 언어가 오른쪽에서 왼쪽으로 쓰는 언어(RTL)면 시스템이 화면을 뒤집습니다. RTL 번역은 아랍어뿐이고, 아랍어 문구는 뒤집힌 배치에 맞춰 옮겼습니다('왼쪽 아래의 지구본 버튼', '오른쪽에서 네 번째 칸').
+- 번역이 없는 RTL 언어(히브리어·페르시아어·우르두어) 하나만 쓰는 폰에서는 문구가 영어로 나오는데 배치만 뒤집혀, 영어 도움말의 '오른쪽 아래', '왼쪽에서 네 번째'가 화면과 반대가 됐습니다(#489). 폰의 언어 목록에 영어가 함께 있으면 시스템이 영어를 골라 처음부터 뒤집히지 않습니다.
+- 그래서 `MainActivity`와 `tile/StartVisualizerActivity`가 setContent 맨 바깥에서 방향을 정합니다(`ProvideAppLayoutDirection`). `res/values/bools.xml`의 `rtl_layout`이 false(기본)면 왼쪽에서 오른쪽으로 고정하고, true 인 언어(`values-ar`)만 시스템 방향을 따릅니다. 대화 상자와 팝업도 이 방향을 물려받습니다. 개발자 옵션의 'RTL 레이아웃 방향 강제'로는 앱 화면이 뒤집히지 않으므로, RTL 배치는 앱 언어를 아랍어로 바꿔 확인합니다.
+- RTL 언어를 번역해 넣으면 그 폴더에도 `bools.xml`을 두고 `rtl_layout`을 true 로 합니다. 지원 언어의 이름이 오른쪽에서 쓰는 글자인데 true 가 아니면 `AppLayoutDirectionTest`가 실패합니다.
+- 튜토리얼과 쉬운 설정의 폰 그림, 오버레이는 실제 좌우(왼쪽 소리는 왼쪽)를 그리므로 어느 언어에서도 뒤집지 않습니다.
+
 ### 폰 설정에 뜨는 언어 목록
 
 `app/build.gradle.kts`의 `androidResources { generateLocaleConfig = true }`로, 빌드할 때 `values-xx` 폴더를 모아 locale config(`_generated_res_locale_config.xml`)를 만들고 매니페스트의 `android:localeConfig`에 넣습니다. Android 13 이상의 폰 설정 **앱 언어**에 이 목록이 뜹니다. 폴더를 추가하면 목록도 따라 바뀌므로 따로 고칠 파일이 없습니다.
@@ -774,6 +783,7 @@ App Bundle로 배포하더라도 앱 안에서 고른 언어의 문구가 빠지
 - 탭 줄은 넘치면 옆으로 밀립니다.
 - 홈의 실행·실행 종료 버튼, 모드 선택 칸, 진동 방식 선택지, 쉬운 설정의 두 칸과 세 단계 칸(#408)은 가운데 정렬로 줄을 바꾸고, 같은 줄의 칸 높이를 함께 맞춥니다. 쉬운 설정의 낱말은 그림 밑에 붙으므로 한두 낱말로 번역합니다.
 - 슬라이더는 이름·값 한 줄과 전체 폭 슬라이더 한 줄로 나눠, 긴 이름이 들어갈 자리를 넓게 둡니다. 그래도 넘치면 줄을 바꾸고, 긴 단어는 하이픈을 넣어 끊습니다(`wrappingLabelStyle`, 하이픈 규칙이 있는 언어만).
+- 자세한 설정의 소리 종류 스위치 이름('환경음 표시' 등)은 스위치와 색상 버튼을 뺀 칸이라 폭 360dp 폰에서 148dp 입니다. 독일어 'Umgebungsgeräusche zeigen'이 낱말 중간에서 끊겨, 같은 낱말을 쓰는 쉬운 설정·분류 탭처럼 하이픈을 넣어 끊습니다(#489, `SettingsTabSourceTest`).
 
 ---
 

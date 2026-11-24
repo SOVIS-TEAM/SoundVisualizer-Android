@@ -457,7 +457,14 @@ fun ColorSettingRow(
                     onValueChange = onCheckedChange
                 )
         ) {
-            Text(label, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = PrimaryTextColor, modifier = Modifier.weight(1f))
+            // 스위치와 색상 버튼을 뺀 칸이라 폭 360dp 폰에서 148dp 다. 긴 번역어("Umgebungsgeräusche")는 쉬운 설정·분류 탭처럼
+            // 하이픈을 넣어 끊는다(#489). 그러지 않으면 낱말 중간에서 표시 없이 끊긴다.
+            Text(
+                label,
+                fontSize = 16.sp, fontWeight = FontWeight.Bold, color = PrimaryTextColor,
+                style = wrappingLabelStyle(),
+                modifier = Modifier.weight(1f)
+            )
             Switch(
                 checked = checked,
                 // 누르는 것은 줄 전체가 받는다.
