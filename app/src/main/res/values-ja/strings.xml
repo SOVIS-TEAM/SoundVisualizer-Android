@@ -222,6 +222,8 @@
 
     <!-- Color picker -->
     <string name="color_picker_title">色を選択</string>
+    <string name="color_picker_square_desc">色の四角形：彩度 %1$d%%、明るさ %2$d%%。ドラッグして変更します。スクリーンリーダーでは、下の「よく使う色」から選ぶほうが簡単です。</string>
+    <string name="color_picker_hue_desc">色相バー：%1$d度。左右にドラッグして変更します。</string>
     <string name="color_picker_presets">よく使う色</string>
     <string name="cd_preset_white">白</string>
     <string name="cd_preset_red">赤</string>
@@ -299,7 +301,7 @@
     <string name="help_perm_capture">画面の録画</string>
     <string name="help_perm_capture_desc">Android では、この同意がないとアプリはスマートフォンで再生中の音を取得できません。画面の映像は取得しません。</string>
     <string name="help_perm_notification">通知（Android 13 以降）</string>
-    <string name="help_perm_notification_desc">「停止」ボタン付きの実行中の通知を表示します。許可しなくてもアプリは動作します。</string>
+    <string name="help_perm_notification_desc">「停止」ボタン付きの実行中の通知を表示し、自分でオフにしていないのに音の可視化がオフになったときにお知らせします。許可しなくてもアプリは動作します。その場合、オフになったときは振動だけでお知らせし、アプリを開くと「ホーム」タブに何がオフになったかを表示します。</string>
 
     <string name="help_modes_title">表示モード</string>
     <string name="help_mode_wave_desc">画面の端全体が、音の大きさに合わせて内側へ押し寄せます。音のする側は、さらに深く押し寄せます。</string>
@@ -343,7 +345,7 @@
     <string name="help_faq_install_q">新しいバージョンをインストールできません。</string>
     <string name="help_faq_install_a">別の環境でビルドされた APK は署名が異なるため、既存のアプリに上書きインストールできません。既存のアプリをアンインストールしてからインストールしてください。この場合、設定はリセットされます。</string>
     <string name="help_faq_battery_q">バッテリーを多く消費しますか？</string>
-    <string name="help_faq_battery_a">音が鳴っているときだけ描画し、静かなときは待機状態になります。ただし、音を取得し続けるため、使わないときはオフにすることをおすすめします。</string>
+    <string name="help_faq_battery_a">音が鳴っているときだけ描画し、静かなときは待機状態になります。画面が消えている間は、初期設定では音の取得を止めます。ただし、画面がついている間は音を取得し続けるため、使わないときはオフにすることをおすすめします。</string>
     <string name="help_faq_battery_less_drawing">音が鳴っているときは、グラフィックの描画に最も多くの電力を使います。「設定」タブの「詳細設定」にある「バッテリー」で「グラフィックの描画回数を減らす」をオンにすると、動きのなめらかさは下がりますが、消費電力が少なくなります。</string>
     <string name="help_faq_language_q">アプリの言語はどうやって変更しますか？</string>
     <string name="help_faq_language_a">「ホーム」タブの右下にある地球儀のボタンをタップし、使用する言語を選びます。「システムのデフォルト」を選ぶと、スマートフォンの言語に合わせて表示されます。Android 13 以降では、スマートフォンの設定の「アプリの言語」からも変更できます。</string>

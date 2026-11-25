@@ -222,6 +222,8 @@
 
     <!-- Color picker -->
     <string name="color_picker_title">Renk seçin</string>
+    <string name="color_picker_square_desc">Renk alanı: doygunluk %%%1$d, parlaklık %%%2$d. Değiştirmek için sürükleyin. Ekran okuyucuyla aşağıdaki sık kullanılan renklerden birini seçmek daha kolaydır.</string>
+    <string name="color_picker_hue_desc">Ton kaydırıcısı: %1$d°. Değiştirmek için sola veya sağa sürükleyin.</string>
     <string name="color_picker_presets">Sık kullanılan renkler</string>
     <string name="cd_preset_white">Beyaz</string>
     <string name="cd_preset_red">Kırmızı</string>
@@ -299,7 +301,7 @@
     <string name="help_perm_capture">Ekran kaydı</string>
     <string name="help_perm_capture_desc">Android, uygulamaların telefonunuzdaki sesi yalnızca bu onay aracılığıyla yakalamasına izin verir. Ekranınız kaydedilmez.</string>
     <string name="help_perm_notification">Bildirimler (Android 13+)</string>
-    <string name="help_perm_notification_desc">Uygulamanın çalıştığını belirten bildirimi “Durdur” düğmesiyle birlikte gösterir. Bu izni reddetseniz de uygulama çalışır.</string>
+    <string name="help_perm_notification_desc">Uygulamanın çalıştığını belirten bildirimi “Durdur” düğmesiyle birlikte gösterir ve siz durdurmadığınız hâlde ses görselleştirme kapandığında sizi bilgilendirir. Bu izni reddetseniz de uygulama çalışır. Bu durumda görselleştirme kapanırsa yalnızca titreşim haber verir; uygulamayı açtığınızda “Ana sayfa” sekmesinde neyin kapandığını görürsünüz.</string>
 
     <string name="help_modes_title">Görsel modlar</string>
     <string name="help_mode_wave_desc">Ekranın tüm kenarları ses yüksekliğine göre içeri doğru ilerler. Sesin geldiği taraf daha derine uzanır.</string>
@@ -343,7 +345,7 @@
     <string name="help_faq_install_q">Yeni sürüm yüklenmiyor.</string>
     <string name="help_faq_install_a">Başka bir yerde derlenen APK farklı bir imzaya sahip olduğundan mevcut uygulamanın üzerine yüklenemez. Önce mevcut uygulamayı kaldırın, ardından yeni sürümü yükleyin. Bu işlem ayarlarınızı sıfırlar.</string>
     <string name="help_faq_battery_q">Çok pil harcıyor mu?</string>
-    <string name="help_faq_battery_a">Yalnızca ses varken çizim yapar, ses olmadığında bekleme moduna geçer. Yine de sesi sürekli yakaladığı için kullanmadığınızda kapatmanızı öneririz.</string>
+    <string name="help_faq_battery_a">Yalnızca ses varken çizim yapar, ses olmadığında bekleme moduna geçer. Ekran kapalıyken varsayılan olarak ses yakalamayı durdurur. Yine de ekran açıkken sesi sürekli yakaladığı için kullanmadığınızda kapatmanızı öneririz.</string>
     <string name="help_faq_battery_less_drawing">Ses varken pilin en çok harcandığı iş grafikleri çizmektir. “Ayarlar” sekmesinde, “Ayrıntılı” görünümündeki “Pil” bölümünde yer alan “Grafikleri daha seyrek çiz” seçeneğini açarsanız daha az pil harcanır, ancak hareket daha az akıcı olur.</string>
     <string name="help_faq_language_q">Uygulama dilini nasıl değiştiririm?</string>
     <string name="help_faq_language_a">“Ana sayfa” sekmesinin sağ altındaki dünya simgesi düğmesine dokunup bir dil seçin. “Sistem varsayılanı” telefonunuzun dilini kullanır. Android 13 ve sonraki sürümlerde telefonunuzun ayarlarındaki “Uygulama dilleri” bölümünden de değiştirebilirsiniz.</string>

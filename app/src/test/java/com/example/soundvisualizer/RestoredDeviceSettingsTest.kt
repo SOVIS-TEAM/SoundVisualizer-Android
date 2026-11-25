@@ -16,7 +16,7 @@ import org.junit.Test
  */
 class RestoredDeviceSettingsTest {
 
-    /** 그 기기에서 쓰던 상태. 꺼짐 안내와 타일 추가 여부, 마이크 감도, 그리고 사용자 설정 하나. */
+    /** 그 기기에서 쓰던 상태. 꺼짐 안내와 타일 추가 여부, 마이크 감도, 개발자 기록 스위치, 그리고 사용자 설정 하나. */
     private fun usedPrefs(): MemoryPrefs {
         val prefs = MemoryPrefs()
         prefs.edit()
@@ -24,6 +24,7 @@ class RestoredDeviceSettingsTest {
             .putInt(SEQ_KEY, 3)
             .putBoolean(TILE_KEY, true)
             .putInt(MIC_KEY, 424)
+            .putBoolean(RECORD_KEY, true)
             .putInt(COLOR_KEY, 0x112233)
             .apply()
         return prefs
@@ -53,6 +54,21 @@ class RestoredDeviceSettingsTest {
         assertEquals(3, SettingsManager.lastUnexpectedStopSeq.value)
         assertTrue(SettingsManager.tileAdded.value)
         assertEquals(424, SettingsManager.micSensitivity.value)
+        assertTrue("같은 기기면 켜 둔 기록도 그대로다", SettingsManager.developerRecord.value)
+    }
+
+    @Test
+    fun `다른 기기에서 복원하면 개발자 기록을 끈다`() {
+        // 기록은 켠 기기의 앱 폴더에 파일을 쌓는다. 켜진 채 옮겨 오면 새 폰에서는 켠 적도 없이 시각화를 켤 때마다
+        // 저장 공간을 쓴다(#490). 새 폰에서 기록하려면 다시 켜면 된다.
+        val prefs = usedPrefs()
+        SettingsManager.load(prefs, deviceTag = "old-phone")
+        assertTrue("옮기기 전 기기에서는 켜 둔 그대로다", SettingsManager.developerRecord.value)
+
+        SettingsManager.load(prefs, deviceTag = "new-phone")
+
+        assertFalse("복원한 폰이 개발자 기록을 켠 채 시작했다", SettingsManager.developerRecord.value)
+        assertFalse("다음에 열 때도 꺼져 있어야 한다", SettingsManager.loadDeveloperRecord(prefs))
     }
 
     @Test
@@ -114,6 +130,7 @@ class RestoredDeviceSettingsTest {
         const val SEQ_KEY = "last_unexpected_stop_seq"
         const val TILE_KEY = "tile_added"
         const val MIC_KEY = "mic_sensitivity"
+        const val RECORD_KEY = "developer_record"
         const val COLOR_KEY = "color_ambient"
         const val INSTALL_KEY = "install_stamp"
         const val DEVICE_KEY = "device_tag"

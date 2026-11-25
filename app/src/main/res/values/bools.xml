@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        화면을 오른쪽에서 왼쪽(RTL)으로 그릴지(#489). 문구를 뒤집힌 배치에 맞춰 옮긴 언어만 true 로 둔다(values-ar).
+        false 면 폰 언어가 RTL 이어도 왼쪽에서 오른쪽으로 그린다(language/AppLayoutDirection.kt). 번역이 없는 RTL 언어
+        (히브리어·페르시아어·우르두어) 하나만 쓰는 폰은 이 값을 읽어 영어 문구를 그대로의 배치로 보여 준다. 뒤집으면 도움말의
+        '오른쪽 아래', '왼쪽에서 네 번째'가 화면과 반대가 된다.
+        RTL 언어를 번역해 넣을 때는 그 폴더에도 이 파일을 두고 true 로 한다. 빠뜨리면 AppLayoutDirectionTest 가 실패한다.
+    -->
+    <bool name="rtl_layout">false</bool>
+</resources>

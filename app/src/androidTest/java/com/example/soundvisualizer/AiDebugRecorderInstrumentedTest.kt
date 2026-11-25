@@ -5,6 +5,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.example.soundvisualizer.ai.AiClassificationResult
 import com.example.soundvisualizer.ai.YamnetCoarseClassifier
 import java.io.File
+import java.io.RandomAccessFile
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -201,6 +202,23 @@ class AiDebugRecorderInstrumentedTest {
         waitFor("쓰는 스레드가 하나만 남음") {
             Thread.getAllStackTraces().keys.count { it.name == "ai-debug-record" && it.isAlive } <= 1
         }
+    }
+
+    @Test
+    fun 새_회차를_열면_폴더_상한을_넘긴_옛_파일부터_지운다() {
+        // 파일 하나의 상한은 회차 하나에만 걸려서, 켜 둔 기기에서는 시각화를 켤 때마다 파일이 쌓였다(#490).
+        // 상한을 넘기는 옛 파일은 크기만 잡아 둔다. 빈 곳이라 실제로 그만큼 쓰지 않는다.
+        logDir.mkdirs()
+        val oldest = File(logDir, "ai-20260101-000000.csv")
+        RandomAccessFile(oldest, "rw").use { it.setLength(AiLogRetention.FOLDER_MAX_BYTES) }
+        val newer = File(logDir, "latency-20260101-000000-1-42.csv").apply { writeText("recording_end") }
+        val stranger = File(logDir, "notes.txt").apply { writeText("기록 도구가 만들지 않은 파일") }
+
+        AiDebugRecorder.start(context)
+        waitFor("상한을 넘긴 옛 파일이 지워짐") { !oldest.exists() }
+
+        assertTrue("상한 아래로 들어온 뒤의 파일까지 지웠다", newer.exists())
+        assertTrue("기록 도구가 만들지 않은 파일을 지웠다", stranger.exists())
     }
 
     @After

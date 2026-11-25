@@ -222,6 +222,8 @@
 
     <!-- Color picker -->
     <string name="color_picker_title">Chọn màu</string>
+    <string name="color_picker_square_desc">Ô màu: độ bão hòa %1$d%%, độ sáng %2$d%%. Kéo để thay đổi. Khi dùng trình đọc màn hình, chọn một trong các màu thường dùng bên dưới sẽ dễ hơn.</string>
+    <string name="color_picker_hue_desc">Thanh sắc độ: %1$d°. Kéo sang trái hoặc phải để thay đổi.</string>
     <string name="color_picker_presets">Màu thường dùng</string>
     <string name="cd_preset_white">Trắng</string>
     <string name="cd_preset_red">Đỏ</string>
@@ -299,7 +301,7 @@
     <string name="help_perm_capture">Ghi màn hình</string>
     <string name="help_perm_capture_desc">Android chỉ cho phép ứng dụng thu âm thanh trên điện thoại khi bạn đồng ý với yêu cầu này. Màn hình của bạn không bị ghi lại.</string>
     <string name="help_perm_notification">Thông báo (Android 13 trở lên)</string>
-    <string name="help_perm_notification_desc">Hiện thông báo cho biết ứng dụng đang chạy, kèm nút “Dừng”. Ứng dụng vẫn hoạt động nếu bạn từ chối quyền này.</string>
+    <string name="help_perm_notification_desc">Hiện thông báo cho biết ứng dụng đang chạy, kèm nút “Dừng”, và cho bạn biết khi âm thanh trực quan tắt mà không phải do bạn tắt. Ứng dụng vẫn hoạt động nếu bạn từ chối quyền này. Khi đó, nếu âm thanh trực quan tắt, chỉ có rung cho bạn biết, và khi bạn mở ứng dụng, thẻ Trang chủ sẽ cho biết điều gì đã tắt.</string>
 
     <string name="help_modes_title">Chế độ hiển thị</string>
     <string name="help_mode_wave_desc">Toàn bộ cạnh màn hình dâng vào trong theo độ lớn âm thanh. Phía có âm thanh phát ra sẽ dâng vào sâu hơn.</string>
@@ -343,7 +345,7 @@
     <string name="help_faq_install_q">Không cài được phiên bản mới.</string>
     <string name="help_faq_install_a">APK được tạo ở nơi khác có chữ ký khác nên không thể cài đè lên ứng dụng hiện có. Hãy gỡ cài đặt ứng dụng hiện có trước rồi mới cài. Việc này sẽ đặt lại các cài đặt của bạn.</string>
     <string name="help_faq_battery_q">Ứng dụng có tốn nhiều pin không?</string>
-    <string name="help_faq_battery_a">Ứng dụng chỉ vẽ khi có âm thanh và chuyển sang trạng thái chờ khi yên tĩnh. Tuy nhiên, vì ứng dụng liên tục thu âm thanh, bạn nên tắt ứng dụng khi không sử dụng.</string>
+    <string name="help_faq_battery_a">Ứng dụng chỉ vẽ khi có âm thanh và chuyển sang trạng thái chờ khi yên tĩnh. Khi màn hình tắt, theo mặc định ứng dụng ngừng thu âm thanh. Tuy nhiên, vì ứng dụng liên tục thu âm thanh trong lúc màn hình bật, bạn nên tắt ứng dụng khi không sử dụng.</string>
     <string name="help_faq_battery_less_drawing">Khi có âm thanh, việc vẽ đồ họa tốn pin nhiều nhất. Nếu bạn bật “Giảm tần suất vẽ đồ họa” ở mục Pin trong phần “Chi tiết” của thẻ Cài đặt, ứng dụng sẽ tốn ít pin hơn, nhưng chuyển động sẽ kém mượt hơn.</string>
     <string name="help_faq_language_q">Làm cách nào để đổi ngôn ngữ ứng dụng?</string>
     <string name="help_faq_language_a">Nhấn nút hình quả địa cầu ở góc dưới bên phải thẻ Trang chủ rồi chọn một ngôn ngữ. “Mặc định của hệ thống” sẽ dùng ngôn ngữ của điện thoại. Trên Android 13 trở lên, bạn cũng có thể đổi trong mục “Ngôn ngữ ứng dụng” ở phần cài đặt của điện thoại.</string>

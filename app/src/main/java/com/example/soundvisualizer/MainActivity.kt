@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.Color
 import com.example.soundvisualizer.language.AppLanguage
+import com.example.soundvisualizer.language.ProvideAppLayoutDirection
 import com.example.soundvisualizer.tile.VisualizerTileService
 import com.example.soundvisualizer.tutorial.TutorialScreen
 import com.example.soundvisualizer.ui.theme.SoundVisualizerTheme
@@ -109,66 +110,69 @@ class MainActivity : ComponentActivity() {
         addOnNewIntentListener { openTabFor(it) }
 
         setContent {
-            SoundVisualizerTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = BgColor
-                ) {
-                    // 본 적이 없으면 저절로, 홈에서 누르면 다시 연다.
-                    val tutorialSeen by SettingsManager.tutorialSeen.collectAsState()
-                    val tutorialOpen = tutorialRequested.value || !tutorialSeen
-                    // 튜토리얼이 아직 화면에 있는지. 닫으면 사라지는 전환(0.3초)이 끝나야 거짓이 된다.
-                    var tutorialOnScreen by remember { mutableStateOf(false) }
-                    // 튜토리얼과 탭 화면을 겹쳐 두지 않고 바꿔 끼운다. 겹쳐 두면 화면 읽어주기가 가려진 탭 화면까지 읽는다.
-                    Crossfade(targetState = tutorialOpen, label = "tutorial") { open ->
-                        if (open) {
-                            // Crossfade 는 사라지는 쪽을 전환이 끝날 때까지 남겨 두므로, 여기서 빠지는 순간이 전환이 끝난 때다.
-                            DisposableEffect(Unit) {
-                                tutorialOnScreen = true
-                                onDispose { tutorialOnScreen = false }
-                            }
-                            TutorialScreen(onClose = ::closeTutorial)
-                        } else {
-                            Box(modifier = Modifier.fillMaxSize()) {
-                                LauncherApp(
-                                    selectedTab = selectedTab.intValue,
-                                    onSelectTab = { selectedTab.intValue = it },
-                                    onStart = { capturePermission.start() },
-                                    onStop = {
-                                        // 직접 껐으면 기다리던 실행도 버린다. 권한을 켜고 돌아와도 다시 켜지지 않는다.
-                                        pendingStart.cancel()
-                                        VisualizerController.stop(this@MainActivity)
-                                    },
-                                    onAddTile = {
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) requestAddTile()
-                                    },
-                                    onOpenTutorial = {
-                                        // 튜토리얼이 사라지는 동안 탭 화면은 투명한 채 맨 위에서 누름을 받는다. ‘확인’을 빠르게 두 번
-                                        // 누르면 둘째 번이 그 자리의 ‘튜토리얼 보기’에 닿아 방금 닫은 튜토리얼이 다시 열렸다(#232).
-                                        // 튜토리얼이 화면에서 빠지기 전의 누름은 받지 않는다. 처음에는 닫은 뒤 0.5초를 실제 시계로
-                                        // 쟀는데, 화면이 멈추는 느린 기기에서는 전환이 그보다 길어 막지 못했다(#249). 전환은 화면
-                                        // 시계를 따르므로 기기 속도와 상관없다.
-                                        if (!tutorialOnScreen) tutorialRequested.value = true
-                                    }
-                                )
-                                // 튜토리얼이 사라지는 동안에는 탭 화면 전체의 누름을 막는다(#264). 위의 검사는 ‘튜토리얼 보기’ 하나만
-                                // 막아서, 가로 화면에서 ‘확인’·‘건너뛰기’를 두 번 누르면 둘째 번이 그 자리의 외부 사운드 모드 스위치를
-                                // 바꿨다. 그 모드는 동의 없이 켜지므로 다음 실행이 모르는 사이 마이크로 시작된다. 맨 위에 덮어 두어
-                                // 모든 누름을 여기서 삼킨다. 화면 읽어주기의 동작은 누름 이벤트가 아니라 여기서 막히지 않지만, 0.3초 안에
-                                // 두 번 동작시키는 일은 드물다.
-                                if (tutorialOnScreen) {
-                                    Box(
-                                        modifier = Modifier.matchParentSize().pointerInput(Unit) {
-                                            awaitPointerEventScope {
-                                                while (true) awaitPointerEvent().changes.forEach { it.consume() }
-                                            }
+            // 화면의 좌우 방향은 문구의 언어를 따른다. 번역이 없는 RTL 언어에서 영어 문구를 뒤집어 그리지 않는다(#489).
+            ProvideAppLayoutDirection {
+                SoundVisualizerTheme {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = BgColor
+                    ) {
+                        // 본 적이 없으면 저절로, 홈에서 누르면 다시 연다.
+                        val tutorialSeen by SettingsManager.tutorialSeen.collectAsState()
+                        val tutorialOpen = tutorialRequested.value || !tutorialSeen
+                        // 튜토리얼이 아직 화면에 있는지. 닫으면 사라지는 전환(0.3초)이 끝나야 거짓이 된다.
+                        var tutorialOnScreen by remember { mutableStateOf(false) }
+                        // 튜토리얼과 탭 화면을 겹쳐 두지 않고 바꿔 끼운다. 겹쳐 두면 화면 읽어주기가 가려진 탭 화면까지 읽는다.
+                        Crossfade(targetState = tutorialOpen, label = "tutorial") { open ->
+                            if (open) {
+                                // Crossfade 는 사라지는 쪽을 전환이 끝날 때까지 남겨 두므로, 여기서 빠지는 순간이 전환이 끝난 때다.
+                                DisposableEffect(Unit) {
+                                    tutorialOnScreen = true
+                                    onDispose { tutorialOnScreen = false }
+                                }
+                                TutorialScreen(onClose = ::closeTutorial)
+                            } else {
+                                Box(modifier = Modifier.fillMaxSize()) {
+                                    LauncherApp(
+                                        selectedTab = selectedTab.intValue,
+                                        onSelectTab = { selectedTab.intValue = it },
+                                        onStart = { capturePermission.start() },
+                                        onStop = {
+                                            // 직접 껐으면 기다리던 실행도 버린다. 권한을 켜고 돌아와도 다시 켜지지 않는다.
+                                            pendingStart.cancel()
+                                            VisualizerController.stop(this@MainActivity)
+                                        },
+                                        onAddTile = {
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) requestAddTile()
+                                        },
+                                        onOpenTutorial = {
+                                            // 튜토리얼이 사라지는 동안 탭 화면은 투명한 채 맨 위에서 누름을 받는다. ‘확인’을 빠르게 두 번
+                                            // 누르면 둘째 번이 그 자리의 ‘튜토리얼 보기’에 닿아 방금 닫은 튜토리얼이 다시 열렸다(#232).
+                                            // 튜토리얼이 화면에서 빠지기 전의 누름은 받지 않는다. 처음에는 닫은 뒤 0.5초를 실제 시계로
+                                            // 쟀는데, 화면이 멈추는 느린 기기에서는 전환이 그보다 길어 막지 못했다(#249). 전환은 화면
+                                            // 시계를 따르므로 기기 속도와 상관없다.
+                                            if (!tutorialOnScreen) tutorialRequested.value = true
                                         }
                                     )
+                                    // 튜토리얼이 사라지는 동안에는 탭 화면 전체의 누름을 막는다(#264). 위의 검사는 ‘튜토리얼 보기’ 하나만
+                                    // 막아서, 가로 화면에서 ‘확인’·‘건너뛰기’를 두 번 누르면 둘째 번이 그 자리의 외부 사운드 모드 스위치를
+                                    // 바꿨다. 그 모드는 동의 없이 켜지므로 다음 실행이 모르는 사이 마이크로 시작된다. 맨 위에 덮어 두어
+                                    // 모든 누름을 여기서 삼킨다. 화면 읽어주기의 동작은 누름 이벤트가 아니라 여기서 막히지 않지만, 0.3초 안에
+                                    // 두 번 동작시키는 일은 드물다.
+                                    if (tutorialOnScreen) {
+                                        Box(
+                                            modifier = Modifier.matchParentSize().pointerInput(Unit) {
+                                                awaitPointerEventScope {
+                                                    while (true) awaitPointerEvent().changes.forEach { it.consume() }
+                                                }
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
+                        CapturePermissionDialogs(capturePermission)
                     }
-                    CapturePermissionDialogs(capturePermission)
                 }
             }
         }

@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -64,8 +65,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
@@ -106,6 +107,20 @@ private const val REFERENCE_SHORT_SIDE_DP = 411f
 
 /** 진동 쪽에서 폰 양옆에 진동 표시를 그릴 자리. */
 private val VIBRATION_MARK_ROOM = 26.dp
+
+/** [scene] 의 폰 그림 양옆에 비워 둘 자리. 진동 쪽만 진동 표시를 그린다. */
+private fun markRoomOf(scene: TutorialScene): Dp = if (scene == TutorialScene.Vibration) VIBRATION_MARK_ROOM else 0.dp
+
+/** 칸이 [maxWidth]×[maxHeight] 일 때 [scene] 의 폰 그림 폭. 칸의 폭(양옆 표시 자리를 뺀 폭)과 높이 가운데 먼저 닿는 쪽이 정한다. */
+private fun demoPhoneWidth(scene: TutorialScene, maxWidth: Dp, maxHeight: Dp): Dp =
+    min(min(maxWidth - markRoomOf(scene) * 2, maxHeight * PHONE_ASPECT), PHONE_MAX_WIDTH)
+
+/**
+ * 칸의 폭이 [width] 이고 높이는 넉넉할 때 [scene] 의 폰 그림 높이. 세로 화면은 이렇게 폭이 그림 크기를 정하므로
+ * 그림 칸을 이보다 조금만 높게 잡는다([portraitIllustrationHeight]).
+ */
+internal fun demoPhoneHeight(scene: TutorialScene, width: Dp): Dp =
+    demoPhoneWidth(scene, width, Dp.Infinity).coerceAtLeast(0.dp) / PHONE_ASPECT
 
 private val PhoneBodyColor = Color(0xFF101216)
 private val PhoneEdgeColor = Color(0xFF3A3F47)
@@ -160,8 +175,8 @@ internal fun TutorialIllustration(
     sounds: TutorialFrameFollower? = null
 ) {
     BoxWithConstraints(modifier = modifier.clearAndSetSemantics { }, contentAlignment = Alignment.Center) {
-        val markRoom = if (scene == TutorialScene.Vibration) VIBRATION_MARK_ROOM else 0.dp
-        val phoneWidth = min(min(maxWidth - markRoom * 2, maxHeight * PHONE_ASPECT), PHONE_MAX_WIDTH)
+        val markRoom = markRoomOf(scene)
+        val phoneWidth = demoPhoneWidth(scene, maxWidth, maxHeight)
         if (phoneWidth > 0.dp) {
             val phoneHeight = phoneWidth / PHONE_ASPECT
             // 폰 그림의 왼쪽·오른쪽은 실제 방향이다(왼쪽 소리는 왼쪽). 아랍어처럼 오른쪽에서 쓰는 언어에서도 뒤집지 않는다.
@@ -514,7 +529,8 @@ private fun LegendRow(@StringRes name: Int, @StringRes examples: Int, color: Col
         modifier = Modifier
             .fillMaxWidth()
             .background(if (active) CardColor else Color.Transparent, RoundedCornerShape(12.dp))
-            .padding(horizontal = 12.dp, vertical = 8.dp)
+            // 위아래 여백은 폭 360dp·높이 780dp 폰에서도 세 줄의 이름이 한 화면에 들어오게 잡았다(#488).
+            .padding(horizontal = 12.dp, vertical = 5.dp)
             // 이름과 예를 한 덩어리로 읽는다("환경음, 음악·빗소리 등 그 밖의 소리").
             .semantics(mergeDescendants = true) { }
     ) {
@@ -540,6 +556,80 @@ private fun LegendRow(@StringRes name: Int, @StringRes examples: Int, color: Col
 private const val PORTRAIT_ASPECT = 2.05f
 private val HOME_PHONE_MAX_WIDTH = 170.dp
 
+/** 홈 화면 그림 속 제목의 가장 큰 글자 크기. 그림이 작으면 줄인다([fittedTitleSize]). */
+private val HOME_TITLE_MAX_SIZE = 13.dp
+
+/** 홈 화면 그림 속 버튼 글자 크기. */
+private val HOME_BUTTON_TEXT_SIZE = 10.dp
+
+/** 홈 화면 그림에서 화면 안 좌우 여백. */
+private val HOME_SCREEN_PADDING = 12.dp
+
+/** 홈 화면 그림의 실행·실행 종료 버튼 사이. */
+private val HOME_BUTTON_GAP = 6.dp
+
+/** 홈 화면 그림의 버튼 안 여백. */
+private val HOME_BUTTON_PADDING = 4.dp
+
+/** 그림 속 글자를 칸에 맞출 때 칸 폭에서 쓰는 몫. 미리 잰 글 폭과 그릴 때의 칸 폭은 픽셀 반올림으로 조금 다를 수 있다. */
+private const val TEXT_FIT = 0.97f
+
+/** 칸이 [maxWidth]×[maxHeight] 일 때 마지막 쪽의 세워 든 폰 그림 폭. 세로 화면에서는 칸의 높이가 정한다. */
+internal fun homePhoneWidth(maxWidth: Dp, maxHeight: Dp): Dp = min(min(maxHeight / PORTRAIT_ASPECT, maxWidth), HOME_PHONE_MAX_WIDTH)
+
+/** 폭이 [phoneWidth] 인 홈 화면 그림에서 글자가 들어갈 폭. 테두리와 화면 안 좌우 여백을 뺀다. */
+internal fun homeTextRoom(phoneWidth: Dp): Dp = phoneWidth - BEZEL * 2 - HOME_SCREEN_PADDING * 2
+
+/** 폭이 [phoneWidth] 인 홈 화면 그림에서 실행·실행 종료 버튼 하나에 글자가 들어갈 폭. */
+internal fun homeButtonTextRoom(phoneWidth: Dp): Dp = (homeTextRoom(phoneWidth) - HOME_BUTTON_GAP) / 2 - HOME_BUTTON_PADDING * 2
+
+/** 폭이 [width] 인 글이 칸 [room] 에 한 줄로 들어가는지. */
+internal fun fitsOnOneLine(width: Dp, room: Dp): Boolean = width <= room * TEXT_FIT
+
+/**
+ * 버튼 하나에 쓸 글자. 칸 [room] 에 한 줄로 들어가면 그대로 쓰고, 낱말이 둘이고 낱말마다 한 줄에 들어가면 낱말 사이를
+ * 줄바꿈으로 바꿔 두 줄로 쓴다('실행 종료' → '실행' / '종료'). 그것도 안 되면 null 이다(막대로 그린다).
+ * 한국어의 기본 줄바꿈은 글자 단위라 그냥 줄바꿈을 켜면 '실행 종/료'로 꺾일 수 있어서 줄바꿈 자리를 직접 넣는다.
+ *
+ * @param widthOf 한 줄로 쓸 때 글의 폭
+ */
+internal fun fittedButtonLabel(label: String, room: Dp, widthOf: (String) -> Dp): String? {
+    if (fitsOnOneLine(widthOf(label), room)) return label
+    val words = label.split(' ').filter { it.isNotEmpty() }
+    if (words.size == 2 && words.all { fitsOnOneLine(widthOf(it), room) }) return words.joinToString("\n")
+    return null
+}
+
+/**
+ * 홈 화면 그림의 실행·실행 종료 버튼에 쓸 글자(앞이 실행, 뒤가 실행 종료, null 이면 막대). 버튼 하나의 글자 칸 [room] 에
+ * 맞춰 고른다([fittedButtonLabel]). 실행 종료 글자는 실행 글자를 쓸 때만 쓴다. 실행 버튼만 비고 옆 버튼에 글자가 있으면
+ * 누를 곳을 잘못 읽는다.
+ */
+internal fun homeButtonLabels(start: String, stop: String, room: Dp, widthOf: (String) -> Dp): Pair<String?, String?> {
+    val startText = fittedButtonLabel(start, room, widthOf)
+    return startText to (if (startText != null) fittedButtonLabel(stop, room, widthOf) else null)
+}
+
+/**
+ * 홈 화면 그림의 제목 글자 크기. [max] 에서 시작해, 가장 긴 낱말이 글자 칸 [room] 에 한 줄로 들어갈 때까지 줄인다.
+ * 낱말 사이에서는 줄을 바꿔도 되므로 제목 전체가 아니라 가장 긴 낱말을 맞춘다. 칸이 없으면 0 이다(그리지 않는다).
+ *
+ * 낱말 폭은 글자 크기에 거의 비례하지만 글자 사이 간격은 크기와 상관없이 그대로라, 비율대로 한 번 줄여도 조금 넘칠 수 있다.
+ * 그래서 다시 재 보고 넘치면 또 줄인다.
+ *
+ * @param widthAt 그 글자 크기에서 가장 긴 낱말의 폭
+ */
+internal fun fittedTitleSize(max: Dp, room: Dp, widthAt: (Dp) -> Dp): Dp {
+    if (room <= 0.dp) return 0.dp
+    var size = max
+    repeat(4) {
+        val width = widthAt(size)
+        if (fitsOnOneLine(width, room)) return size
+        size *= room * TEXT_FIT / width
+    }
+    return size
+}
+
 /**
  * 마지막 쪽의 그림: 홈 화면을 줄여 그린 세워 든 폰. 실행 버튼 둘레로 테두리가 퍼져 누를 곳을 가리킨다.
  *
@@ -549,17 +639,45 @@ private val HOME_PHONE_MAX_WIDTH = 170.dp
 @Composable
 internal fun HomeScreenIllustration(running: Boolean, modifier: Modifier = Modifier) {
     BoxWithConstraints(modifier = modifier.clearAndSetSemantics { }, contentAlignment = Alignment.Center) {
-        val phoneWidth = min(min(maxHeight / PORTRAIT_ASPECT, maxWidth), HOME_PHONE_MAX_WIDTH)
+        val phoneWidth = homePhoneWidth(maxWidth, maxHeight)
         if (phoneWidth > 0.dp) HomePhone(phoneWidth, phoneWidth * PORTRAIT_ASPECT, running)
     }
 }
 
+/**
+ * 홈 화면 그림 속 폰. 글자는 dp 로 고정하고(위 설명), 그림이 작으면 칸에 맞춘다(#488).
+ *
+ * - 제목은 가장 긴 낱말('Visualizer')이 한 줄에 들어가게 줄인다. 그대로 두면 폭 360dp 폰에서 'Visualiz/er'처럼 낱말
+ *   중간에서 꺾이고, 낮은 화면에서는 줄이 늘어 맨 아래의 실행 버튼이 눌려 거의 사라졌다.
+ * - 버튼 글자는 한 줄에 들어가지 않으면 낱말 사이에서 두 줄로, 그것도 안 되면 막대로 그린다([homeButtonLabels]).
+ *   그대로 두면 '실/행'처럼 한 글자씩 세로로 섰다. 막대로 그려도 실행 버튼의 자리는 둘레로 퍼지는 테두리가 가리킨다.
+ */
 @Composable
 private fun HomePhone(width: Dp, height: Dp, running: Boolean) {
     val density = LocalDensity.current
-    // 그림 속 글자는 dp 로 고정한다(위 설명).
-    val titleSize = with(density) { 13.dp.toSp() }
-    val buttonTextSize = with(density) { 10.dp.toSp() }
+    val measurer = rememberTextMeasurer()
+    val baseStyle = LocalTextStyle.current
+    val title = stringResource(R.string.home_title)
+    val startLabel = stringResource(R.string.home_start)
+    val stopLabel = stringResource(R.string.home_stop)
+    val textRoom = homeTextRoom(width)
+    val titleSize = remember(title, textRoom, baseStyle, density, measurer) {
+        val words = title.split(' ').filter { it.isNotEmpty() }
+        fittedTitleSize(HOME_TITLE_MAX_SIZE, textRoom) { size ->
+            val style = baseStyle.copy(fontSize = with(density) { size.toSp() }, fontWeight = FontWeight.Black)
+            val widest = words.maxOfOrNull { measurer.measure(it, style, softWrap = false, maxLines = 1).size.width } ?: 0
+            with(density) { widest.toDp() }
+        }
+    }
+    val titleTextSize = with(density) { titleSize.toSp() }
+    val buttonTextSize = with(density) { HOME_BUTTON_TEXT_SIZE.toSp() }
+    val buttonRoom = homeButtonTextRoom(width)
+    val (startText, stopText) = remember(startLabel, stopLabel, buttonRoom, baseStyle, density, measurer) {
+        val style = baseStyle.copy(fontSize = buttonTextSize, fontWeight = FontWeight.Bold)
+        fun widthOf(label: String): Dp =
+            with(density) { measurer.measure(label, style, softWrap = false, maxLines = 1).size.width.toDp() }
+        homeButtonLabels(startLabel, stopLabel, buttonRoom, ::widthOf)
+    }
     val pulse = if (running) {
         rememberInfiniteTransition(label = "start").animateFloat(
             initialValue = 0f,
@@ -580,13 +698,15 @@ private fun HomePhone(width: Dp, height: Dp, running: Boolean) {
                 .fillMaxSize()
                 .clip(RoundedCornerShape(SCREEN_CORNER))
                 .background(BgColor)
-                .padding(horizontal = 12.dp),
+                .padding(horizontal = HOME_SCREEN_PADDING),
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                stringResource(R.string.home_title),
-                fontSize = titleSize, lineHeight = titleSize * 1.3f, fontWeight = FontWeight.Black, color = PrimaryTextColor
-            )
+            if (titleSize > 0.dp) {
+                Text(
+                    title,
+                    fontSize = titleTextSize, lineHeight = titleTextSize * 1.3f, fontWeight = FontWeight.Black, color = PrimaryTextColor
+                )
+            }
             // 설명 두 줄과 상태 줄은 글자 대신 막대로 그린다.
             Spacer(Modifier.height(8.dp))
             MockLine(0.95f)
@@ -620,16 +740,20 @@ private fun HomePhone(width: Dp, height: Dp, running: Boolean) {
                             )
                         }
                         .background(AccentFillColor, RoundedCornerShape(corner))
-                        .padding(4.dp),
+                        .padding(HOME_BUTTON_PADDING),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        stringResource(R.string.home_start),
-                        fontSize = buttonTextSize, lineHeight = buttonTextSize * 1.2f, fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center, color = Color.White, maxLines = 2, overflow = TextOverflow.Ellipsis
-                    )
+                    if (startText != null) {
+                        Text(
+                            startText,
+                            fontSize = buttonTextSize, lineHeight = buttonTextSize * 1.2f, fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center, color = Color.White, maxLines = 2, softWrap = false
+                        )
+                    } else {
+                        MockLine(0.6f, Color.White.copy(alpha = 0.8f))
+                    }
                 }
-                Spacer(Modifier.width(6.dp))
+                Spacer(Modifier.width(HOME_BUTTON_GAP))
                 // 꺼져 있을 때의 실행 종료 버튼(홈과 같은 비활성 색)
                 Box(
                     modifier = Modifier
@@ -637,27 +761,32 @@ private fun HomePhone(width: Dp, height: Dp, running: Boolean) {
                         .fillMaxHeight()
                         .heightIn(min = 30.dp)
                         .background(Color(0xFF333A44), RoundedCornerShape(corner))
-                        .padding(4.dp),
+                        .padding(HOME_BUTTON_PADDING),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        stringResource(R.string.home_stop),
-                        fontSize = buttonTextSize, lineHeight = buttonTextSize * 1.2f, fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center, color = SecondaryTextColor, maxLines = 2, overflow = TextOverflow.Ellipsis
-                    )
+                    if (stopText != null) {
+                        Text(
+                            stopText,
+                            fontSize = buttonTextSize, lineHeight = buttonTextSize * 1.2f, fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center, color = SecondaryTextColor, maxLines = 2, softWrap = false
+                        )
+                    } else {
+                        MockLine(0.6f, SecondaryTextColor.copy(alpha = 0.8f))
+                    }
                 }
             }
         }
     }
 }
 
+/** 글자 대신 그리는 막대. 색을 주지 않으면 설명 줄의 색이다. */
 @Composable
-private fun MockLine(fraction: Float) {
+private fun MockLine(fraction: Float, color: Color = SecondaryTextColor.copy(alpha = 0.45f)) {
     Box(
         Modifier
             .fillMaxWidth(fraction)
             .height(5.dp)
             .clip(RoundedCornerShape(2.5.dp))
-            .background(SecondaryTextColor.copy(alpha = 0.45f))
+            .background(color)
     )
 }

@@ -2,7 +2,7 @@
 
 # SoundVisualizer 개인정보처리방침
 
-시행일: 2026년 11월 16일
+시행일: 2026년 11월 25일
 
 SoundVisualizer(이하 "앱")는 팀 SOVIS가 만든 Android 앱입니다. 이 방침은 앱이 어떤 정보를 다루는지 설명합니다.
 
@@ -22,8 +22,8 @@ SoundVisualizer(이하 "앱")는 팀 SOVIS가 만든 Android 앱입니다. 이 �
 
 ## 3. 기기에 저장되는 정보
 
-- **설정값:** 모드, 색, 크기, 진동 등 앱 설정을 기기 안에 저장합니다. Android 기기 백업을 켜 두었다면 설정값이 사용자의 Google 계정 백업에 포함될 수 있습니다. 이 백업은 Google이 관리하며, 개발자는 볼 수 없습니다.
-- **개발자 기록:** 숨겨진 개발자 모드에서 기록을 직접 켠 경우에만, AI가 판별한 결과(소리 종류 이름, 점수, 시각)를 앱 전용 폴더에 CSV 파일로 저장합니다. 소리 자체는 저장하지 않으며, 앱을 지우면 함께 지워집니다.
+- **설정값:** 모드, 색, 크기, 진동 등 앱 설정을 기기 안에 저장합니다. 설정과 함께 기기를 구분하는 값과 설치 시각도 저장되며, 이 두 값은 백업에서 옮겨 온 설정인지 가리는 데에만 씁니다. Android 기기 백업을 켜 두었다면 설정값과 이 두 값이 사용자의 Google 계정 백업에 포함될 수 있습니다. 이 백업은 Google이 관리하며, 개발자는 볼 수 없습니다.
+- **개발자 기록:** 설정의 개발자 모드에서 기록을 직접 켠 경우에만, AI가 판별한 결과(소리 종류 이름, 점수, 시각)를 앱 전용 폴더에 CSV 파일로 저장합니다. 새 기록을 시작할 때 파일이 모두 합쳐 약 200MB를 넘지 않도록 오래된 파일부터 지웁니다. 소리 자체는 저장하지 않으며, 앱을 지우면 함께 지워집니다.
 
 ## 4. 권한과 쓰임
 
@@ -33,7 +33,7 @@ SoundVisualizer(이하 "앱")는 팀 SOVIS가 만든 Android 앱입니다. 이 �
 | 화면 녹화 동의 | 다른 앱이 재생하는 소리를 받기 위해 (화면 영상은 받지 않음) |
 | 다른 앱 위에 표시 | 소리를 다른 앱 화면 위에 그리기 위해 |
 | 알림 | 실행 중임을 알리고, 잠금 화면에서 위협음을 알리기 위해 |
-| 진동 | 사용자가 켠 경우 소리를 진동으로 알리기 위해 |
+| 진동 | 소리를 진동으로 알리고(처음에는 위협음만 켜져 있음), 시각화가 저절로 꺼졌을 때 알리기 위해 |
 | 화면 켜짐 유지 | 잠금 화면 위협음 알림 때 화면을 잠깐 켜기 위해 |
 | 포그라운드 서비스 | 다른 앱을 쓰는 동안에도 소리를 계속 받기 위해 |
 
@@ -50,7 +50,7 @@ SoundVisualizer(이하 "앱")는 팀 SOVIS가 만든 Android 앱입니다. 이 �
 ## 7. 문의
 
 - 팀 SOVIS
-- nawwhod@gmail.com
+- sovis.kr@gmail.com
 
 웹에서 보기: https://sovis-team.github.io/privacy/
 
@@ -58,7 +58,7 @@ SoundVisualizer(이하 "앱")는 팀 SOVIS가 만든 Android 앱입니다. 이 �
 
 # SoundVisualizer Privacy Policy
 
-Effective date: November 16, 2026
+Effective date: November 25, 2026
 
 SoundVisualizer (the "app") is an Android app made by team SOVIS. This policy explains what information the app handles.
 
@@ -78,8 +78,8 @@ The app **does not collect any personal information.**
 
 ## 3. Information stored on the device
 
-- **Settings:** the app stores its settings, such as mode, colors, size and vibration, on the device. If Android device backup is on, these settings may be included in your Google account backup. Google manages this backup, and we cannot see it.
-- **Developer log:** only if you turn on logging in the hidden developer mode, the app saves the AI's results (sound type names, scores and times) as CSV files in its own app folder. It does not save the sound itself, and the files are deleted when the app is uninstalled.
+- **Settings:** the app stores its settings, such as mode, colors, size and vibration, on the device. Along with the settings, it also stores a value that tells devices apart and the time the app was installed. These two values are used only to tell whether settings were restored from a backup. If Android device backup is on, the settings and these two values may be included in your Google account backup. Google manages this backup, and we cannot see it.
+- **Developer log:** only if you turn on logging in developer mode in Settings, the app saves the AI's results (sound type names, scores and times) as CSV files in its own app folder. When a new log starts, the oldest files are deleted first so that all the files together stay under about 200 MB. It does not save the sound itself, and the files are deleted when the app is uninstalled.
 
 ## 4. Permissions and why they are used
 
@@ -89,7 +89,7 @@ The app **does not collect any personal information.**
 | Screen recording consent | Capturing sound played by other apps (the screen image is not captured) |
 | Display over other apps | Drawing sound over other apps |
 | Notifications | Showing that the app is running, and alerting danger sounds on the lock screen |
-| Vibration | Vibrating for sounds, when you turn it on |
+| Vibration | Vibrating for sounds (at first, only danger sounds are on), and alerting you when the visualizer stops on its own |
 | Wake lock | Briefly turning on the screen for a lock-screen danger alert |
 | Foreground service | Continuing to capture sound while you use other apps |
 
@@ -106,6 +106,6 @@ If this policy changes, we will update this page and its effective date.
 ## 7. Contact
 
 - Team SOVIS
-- nawwhod@gmail.com
+- sovis.kr@gmail.com
 
 On the web: https://sovis-team.github.io/en/privacy/

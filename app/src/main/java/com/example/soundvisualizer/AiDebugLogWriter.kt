@@ -9,8 +9,9 @@ import com.example.soundvisualizer.ai.AiClassificationResult
  *  - **머리글은 한 번만.** 첫 줄을 쓸 때 같이 나간다. 결과가 한 번도 없으면 빈 파일이 된다.
  *  - **같은 결과는 한 번만.** HUD 는 100ms 마다 읽지만 추론은 250ms 주기라 같은 결과를 두세 번 본다.
  *    [AiClassificationResult.timestampMs] 가 앞서 쓴 것과 같으면 건너뛴다.
- *  - **상한에 닿으면 멈춘다.** 초당 네 줄이 하루면 수십 MB 가 된다. 켜 둔 것을 잊은 기기에서
- *    저장 공간을 먹는 것을 막는다. 멈춘 뒤에는 조용히 아무것도 쓰지 않는다([stopped] 로 알 수 있다).
+ *  - **상한에 닿으면 멈춘다.** 초당 네 줄이 하루면 수십 MB 가 된다. 이 상한은 회차 하나의 파일 하나에만
+ *    걸린다. 켤 때마다 새 파일이 생기므로 폴더 전체는 [AiLogRetention] 이 묶는다(#490).
+ *    멈춘 뒤에는 조용히 아무것도 쓰지 않는다([stopped] 로 알 수 있다).
  *
  * 안드로이드에 의존하지 않아 기기 없이 검사한다 ([AiDebugLogWriterTest]).
  */
@@ -64,7 +65,7 @@ class AiDebugLogWriter(
     }
 
     companion object {
-        /** 기본 상한 20MB. 초당 네 줄(한 줄 약 350바이트)이면 하루쯤 담긴다. */
+        /** 기본 상한 20MB. 소리가 계속 나면(초당 네 줄, 한 줄 약 300바이트) 다섯 시간쯤 담긴다. */
         const val DEFAULT_MAX_BYTES = 20L * 1024 * 1024
     }
 }

@@ -222,6 +222,8 @@
 
     <!-- Color picker -->
     <string name="color_picker_title">Pilih warna</string>
+    <string name="color_picker_square_desc">Bidang warna: saturasi %1$d%%, kecerahan %2$d%%. Tarik untuk mengubah. Dengan pembaca layar, lebih mudah memilih salah satu warna umum di bawah.</string>
+    <string name="color_picker_hue_desc">Penggeser rona: %1$d°. Tarik ke kiri atau kanan untuk mengubah.</string>
     <string name="color_picker_presets">Warna umum</string>
     <string name="cd_preset_white">Putih</string>
     <string name="cd_preset_red">Merah</string>
@@ -299,7 +301,7 @@
     <string name="help_perm_capture">Perekaman layar</string>
     <string name="help_perm_capture_desc">Android hanya mengizinkan aplikasi menangkap suara ponsel Anda melalui persetujuan ini. Layar Anda tidak direkam.</string>
     <string name="help_perm_notification">Notifikasi (Android 13+)</string>
-    <string name="help_perm_notification_desc">Menampilkan notifikasi saat aplikasi berjalan, beserta tombol “Hentikan”. Aplikasi tetap berfungsi meskipun Anda menolaknya.</string>
+    <string name="help_perm_notification_desc">Menampilkan notifikasi saat aplikasi berjalan, beserta tombol “Hentikan”, dan memberi tahu Anda saat visualisasi suara mati tanpa Anda matikan sendiri. Aplikasi tetap berfungsi meskipun Anda menolaknya. Dalam hal ini, jika visualisasi mati, hanya getaran yang memberi tahu Anda, dan Beranda menunjukkan apa yang mati saat Anda membuka aplikasi.</string>
 
     <string name="help_modes_title">Mode visual</string>
     <string name="help_mode_wave_desc">Seluruh tepi layar terdorong ke dalam sesuai kerasnya suara. Sisi asal suara terdorong lebih dalam.</string>
@@ -343,7 +345,7 @@
     <string name="help_faq_install_q">Versi baru tidak dapat diinstal.</string>
     <string name="help_faq_install_a">APK yang dibuat di tempat lain memiliki tanda tangan yang berbeda, sehingga tidak dapat diinstal di atas aplikasi yang sudah ada. Uninstal aplikasi yang ada terlebih dahulu, lalu instal. Setelan Anda akan direset.</string>
     <string name="help_faq_battery_q">Apakah aplikasi ini boros baterai?</string>
-    <string name="help_faq_battery_a">Aplikasi hanya menggambar saat ada suara dan beralih ke mode siaga saat hening. Namun, karena aplikasi terus menangkap suara, sebaiknya matikan saat tidak digunakan.</string>
+    <string name="help_faq_battery_a">Aplikasi hanya menggambar saat ada suara dan beralih ke mode siaga saat hening. Saat layar mati, secara default aplikasi berhenti menangkap suara. Namun, karena aplikasi terus menangkap suara selama layar menyala, sebaiknya matikan saat tidak digunakan.</string>
     <string name="help_faq_battery_less_drawing">Saat ada suara, daya paling banyak terpakai untuk menggambar grafik. Jika Anda menyalakan “Menggambar grafik lebih jarang” di bagian Baterai pada tampilan “Detail” di tab Setelan, daya yang terpakai lebih sedikit, tetapi gerakannya menjadi kurang mulus.</string>
     <string name="help_faq_language_q">Bagaimana cara mengubah bahasa aplikasi?</string>
     <string name="help_faq_language_a">Ketuk tombol bola dunia di kanan bawah tab Beranda, lalu pilih bahasa. “Default sistem” mengikuti bahasa ponsel Anda. Di Android 13 dan versi lebih baru, Anda juga dapat mengubahnya di “Bahasa aplikasi” pada setelan ponsel.</string>

@@ -222,6 +222,8 @@
 
     <!-- Color picker -->
     <string name="color_picker_title">Elige un color</string>
+    <string name="color_picker_square_desc">Campo de color: saturación %1$d %%, brillo %2$d %%. Arrastra para cambiarlos. Con un lector de pantalla, es más fácil elegir uno de los colores habituales de abajo.</string>
+    <string name="color_picker_hue_desc">Barra de tono: %1$d°. Arrastra a la izquierda o a la derecha para cambiarlo.</string>
     <string name="color_picker_presets">Colores habituales</string>
     <string name="cd_preset_white">Blanco</string>
     <string name="cd_preset_red">Rojo</string>
@@ -299,7 +301,7 @@
     <string name="help_perm_capture">Grabación de pantalla</string>
     <string name="help_perm_capture_desc">Android solo permite que las apps capturen el sonido del teléfono con este consentimiento. Tu pantalla no se captura.</string>
     <string name="help_perm_notification">Notificaciones (Android 13 o posterior)</string>
-    <string name="help_perm_notification_desc">Muestra una notificación mientras está en ejecución, con el botón “Detener”. La app sigue funcionando aunque no lo permitas.</string>
+    <string name="help_perm_notification_desc">Muestra una notificación mientras está en ejecución, con el botón “Detener”, y te avisa cuando el visor de sonido se apaga sin que lo hayas detenido tú. La app sigue funcionando aunque no lo permitas. En ese caso, si se apaga, solo te avisa la vibración, y la pestaña Inicio te muestra qué se apagó cuando abres la app.</string>
 
     <string name="help_modes_title">Modos visuales</string>
     <string name="help_mode_wave_desc">Todo el borde de la pantalla avanza hacia dentro según el volumen. El lado del que viene el sonido avanza más.</string>
@@ -343,7 +345,7 @@
     <string name="help_faq_install_q">No se instala una versión nueva.</string>
     <string name="help_faq_install_a">Un APK compilado en otro lugar tiene una firma distinta y no se puede instalar sobre la app actual. Primero desinstala la app actual y luego instala la nueva. Esto restablecerá tus ajustes.</string>
     <string name="help_faq_battery_q">¿Consume mucha batería?</string>
-    <string name="help_faq_battery_a">Solo dibuja mientras hay sonido y pasa a reposo cuando hay silencio. Aun así, como captura el sonido de forma continua, te recomendamos apagarlo cuando no lo uses.</string>
+    <string name="help_faq_battery_a">Solo dibuja mientras hay sonido y pasa a reposo cuando hay silencio. Con la pantalla apagada, de forma predeterminada deja de capturar el sonido. Aun así, como captura el sonido de forma continua mientras la pantalla está encendida, te recomendamos apagarlo cuando no lo uses.</string>
     <string name="help_faq_battery_less_drawing">Mientras hay sonido, lo que más batería gasta es dibujar los gráficos. Si activas “Dibujar los gráficos con menos frecuencia” en Batería, dentro de “Detallado”, en la pestaña Ajustes, la app gasta menos, aunque el movimiento se ve menos fluido.</string>
     <string name="help_faq_language_q">¿Cómo cambio el idioma de la app?</string>
     <string name="help_faq_language_a">Toca el botón del globo terráqueo en la esquina inferior derecha de la pestaña Inicio y elige un idioma. Con “Idioma del sistema”, la app usa el idioma de tu teléfono. En Android 13 y versiones posteriores, también puedes cambiarlo en “Idiomas de las apps”, dentro de los ajustes de tu teléfono.</string>

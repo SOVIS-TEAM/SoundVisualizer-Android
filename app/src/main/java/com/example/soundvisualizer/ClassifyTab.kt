@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -35,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -67,6 +69,12 @@ private val SOUND_TYPES = listOf(AiClassification.AMBIENT, AiClassification.SPEE
 
 /** 목록에서 붙어 있는 찾기·거르기 줄의 자리. 그 앞은 제목·설명·고급 모드 스위치를 담은 칸 하나뿐이다. */
 internal const val STICKY_HEADER_INDEX = 1
+
+/**
+ * 낮은 창([isCurrentWindowShort])에서 결과가 시작하는 자리(#487). 낮은 창에서는 찾기 칸(1)만 붙고, 그 밑의 거르기 줄(2)과
+ * 바꾼 소리 줄(3)은 목록과 함께 올라간다.
+ */
+internal const val SHORT_WINDOW_FIRST_RESULT_INDEX = STICKY_HEADER_INDEX + 3
 
 /** 줄 오른쪽 종류 버튼의 최대 폭. 흔한 폭(411dp)에서 줄 안쪽의 절반쯤이다. */
 private val TYPE_BUTTON_MAX_WIDTH = 150.dp
@@ -164,6 +172,12 @@ fun ClassifyTab() {
         list?.count { SoundCatalog.typeOf(it, overrides) != it.defaultType } ?: 0
     }
 
+    // 낮은 창(가로로 든 폰 등)에서는 찾기 칸만 위에 붙이고 거르기 줄은 목록과 함께 올라가게 둔다(#487). 찾기·거르기를 함께
+    // 붙이면 약 120dp 라, 자판이 뜬 가로 화면에서는 붙은 것만으로 목록 자리가 다 차 결과가 하나도 보이지 않았다.
+    val shortWindow = isCurrentWindowShort()
+    // 붙어 있는 찾기 칸의 높이(px). 낮은 창에서 결과를 그 바로 밑으로 올릴 때 쓴다.
+    var pinnedHeight by remember { mutableIntStateOf(0) }
+
     // 한참 내려간 채로 찾는 말이나 거르기를 바꾸면 결과의 중간부터 보인다. 결과가 찾기 칸 바로 밑부터 보이게 올린다.
     // **찾는 말이 있으면 맨 위에 있어도 올린다.** 찾기 칸을 누르면 자판이 화면 아래 절반을 가리는데, 맨 위의 제목·안내가
     // 남은 자리를 다 차지해 결과가 하나도 보이지 않았다(#283, 에뮬레이터 계측 테스트). 거르기만 바꿀 때는 맨 위면
@@ -171,10 +185,21 @@ fun ClassifyTab() {
     // 자리를 잃는다.
     // 남겨 두던 소리도 이때 지운다(#374). 바꾼 소리가 맞는지는 새 찾는 말·거르기로 다시 본다.
     val listState = rememberLazyListState()
-    LaunchedEffect(listState) {
+    LaunchedEffect(listState, shortWindow) {
+        var lastText = search.text.toString()
         snapshotFlow { search.text.toString() to filter }.drop(1).collect { (text, _) ->
             kept = KeptSounds()
-            if (text.isNotEmpty() || listState.firstVisibleItemIndex > STICKY_HEADER_INDEX) {
+            val typed = text != lastText
+            lastText = text
+            if (shortWindow && typed && text.isNotEmpty()) {
+                // 낮은 창에서 자판이 뜨면 찾기 칸 밑에 한 줄 남짓 남는다. 찾기 칸까지만 올리면 그 자리를 거르기 줄과 바꾼 소리
+                // 줄이 차지하고, 글자를 칠 때마다 다시 올려 손으로 밀어 둔 결과도 밀려난다. 그래서 두 줄을 찾기 칸 밑으로 밀어
+                // 넣어 첫 결과가 찾기 칸 바로 밑에 오게 한다. 결과가 짧아 첫 결과를 맨 위까지 올리지 못하면 놓인 자리에서 잰다.
+                listState.scrollToItem(SHORT_WINDOW_FIRST_RESULT_INDEX)
+                val top = listState.layoutInfo.visibleItemsInfo
+                    .firstOrNull { it.index == SHORT_WINDOW_FIRST_RESULT_INDEX }?.offset ?: 0
+                listState.scrollBy((top - pinnedHeight).toFloat())
+            } else if (text.isNotEmpty() || listState.firstVisibleItemIndex > STICKY_HEADER_INDEX) {
                 listState.scrollToItem(STICKY_HEADER_INDEX)
             }
         }
@@ -246,6 +271,7 @@ fun ClassifyTab() {
 
     LazyColumn(state = listState, modifier = Modifier.padding(horizontal = 24.dp).fillMaxSize()) {
         // 0번: 제목·설명·고급 모드 스위치. 1번(STICKY_HEADER_INDEX): 붙어 있는 찾기·거르기.
+        // 낮은 창에서는 1번에 찾기 칸만 붙고 2번이 거르기 줄이라, 결과는 4번부터다(SHORT_WINDOW_FIRST_RESULT_INDEX).
         item(key = "intro", contentType = "intro") {
             // 화면 읽어주기로 제목 단위로 건너뛸 때 구역 머리(위협음)부터 닿으면, 그 위의 고급 모드 스위치를 지나친다.
             // 설정 탭의 구역 제목처럼 탭 제목도 제목으로 둔다.
@@ -293,11 +319,25 @@ fun ClassifyTab() {
 
         // 찾기와 거르기는 긴 목록을 내려가도 손 닿는 곳에 있어야 해서 위에 붙여 둔다.
         // 배경을 칠해 밑으로 지나가는 줄이 비치지 않게 한다. 붙는 부분이 두꺼우면 목록이 보일 자리가 줄어서
-        // 바꾼 개수와 되돌리기는 붙이지 않고 목록과 함께 올라가게 둔다.
+        // 바꾼 개수와 되돌리기는 붙이지 않고 목록과 함께 올라가게 둔다. 낮은 창에서는 같은 까닭으로 거르기 줄도 붙이지 않는다.
         stickyHeader(key = "search", contentType = "search") {
-            Column(modifier = Modifier.fillMaxWidth().background(BgColor).padding(bottom = 8.dp)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(BgColor)
+                    .onSizeChanged { pinnedHeight = it.height }
+                    .padding(bottom = if (shortWindow) 0.dp else 8.dp)
+            ) {
                 SearchField(search)
-                FilterRow(filter, typeColors) { filter = it }
+                if (!shortWindow) FilterRow(filter, typeColors) { filter = it }
+            }
+        }
+        if (shortWindow) {
+            // 찾기 칸 바로 밑에서 목록과 함께 올라간다. 위아래 간격은 붙어 있을 때와 같다.
+            item(key = "filter", contentType = "filter") {
+                Box(modifier = Modifier.padding(bottom = 8.dp)) {
+                    FilterRow(filter, typeColors) { filter = it }
+                }
             }
         }
 

@@ -259,8 +259,8 @@
 
     <!-- Color picker -->
     <string name="color_picker_title">Pick a color</string>
-    <string name="color_picker_square_desc" tools:ignore="MissingTranslation">Colour field: saturation %1$d%%, brightness %2$d%%. Drag to change; the common colours below are easier with a screen reader.</string>
-    <string name="color_picker_hue_desc" tools:ignore="MissingTranslation">Hue slider: %1$d°. Drag left or right to change.</string>
+    <string name="color_picker_square_desc">Color field: saturation %1$d%%, brightness %2$d%%. Drag to change; the common colors below are easier with a screen reader.</string>
+    <string name="color_picker_hue_desc">Hue slider: %1$d°. Drag left or right to change.</string>
     <string name="color_picker_presets">Common colors</string>
     <!-- 화면 읽어주기용 프리셋 색 이름. 색을 보지 못해도 무슨 색인지 알 수 있어야 한다. -->
     <string name="cd_preset_white">White</string>
@@ -397,7 +397,7 @@
     <string name="help_report_desc">Tell us about a bug, or a sound that was shown as the wrong type. GitHub opens in your browser with your app and device details filled in, so it needs a GitHub account. Without one, send us an email instead. No audio is ever sent.</string>
     <string name="help_report_button">Report on GitHub</string>
     <!-- Where reports arrive. Not translated: it is an address, and it is the same everywhere. -->
-    <string name="help_report_email" translatable="false">nawwhod@gmail.com</string>
+    <string name="help_report_email" translatable="false">sovis.kr@gmail.com</string>
     <string name="help_report_mail">Report by email</string>
     <string name="help_report_no_mail">No email app to send with. Copy the device details and send them another way.</string>
     <string name="help_report_copy">Copy device details</string>

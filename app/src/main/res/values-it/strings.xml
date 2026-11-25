@@ -222,6 +222,8 @@
 
     <!-- Color picker -->
     <string name="color_picker_title">Scegli un colore</string>
+    <string name="color_picker_square_desc">Area colore: saturazione %1$d%%, luminosità %2$d%%. Trascina per modificare. Con un lettore di schermo è più facile scegliere tra i colori comuni qui sotto.</string>
+    <string name="color_picker_hue_desc">Cursore della tonalità: %1$d°. Trascina a sinistra o a destra per modificare.</string>
     <string name="color_picker_presets">Colori comuni</string>
     <string name="cd_preset_white">Bianco</string>
     <string name="cd_preset_red">Rosso</string>
@@ -299,7 +301,7 @@
     <string name="help_perm_capture">Registrazione dello schermo</string>
     <string name="help_perm_capture_desc">Android consente alle app di acquisire l\'audio del telefono solo tramite questo consenso. Lo schermo non viene registrato.</string>
     <string name="help_perm_notification">Notifiche (Android 13+)</string>
-    <string name="help_perm_notification_desc">Mostra una notifica mentre l\'app è in esecuzione, con il pulsante “Interrompi”. L\'app funziona anche se non concedi questa autorizzazione.</string>
+    <string name="help_perm_notification_desc">Mostra una notifica mentre l\'app è in esecuzione, con il pulsante “Interrompi”, e ti avvisa quando la visualizzazione dei suoni si disattiva senza che tu l\'abbia interrotta. L\'app funziona anche se non concedi questa autorizzazione. In tal caso, se la visualizzazione si disattiva, ti avvisa solo la vibrazione e, quando apri l\'app, la scheda Home mostra che cosa si è disattivato.</string>
 
     <string name="help_modes_title">Modalità visive</string>
     <string name="help_mode_wave_desc">L\'intero bordo dello schermo avanza verso l\'interno in base al volume. Il lato da cui proviene il suono avanza di più.</string>
@@ -343,7 +345,7 @@
     <string name="help_faq_install_q">Non riesco a installare la nuova versione.</string>
     <string name="help_faq_install_a">Un APK compilato altrove ha una firma diversa e non può essere installato sopra l\'app esistente. Disinstalla prima l\'app esistente, poi installa quella nuova. In questo modo le tue impostazioni vengono azzerate.</string>
     <string name="help_faq_battery_q">Consuma molta batteria?</string>
-    <string name="help_faq_battery_a">L\'app disegna solo quando c\'è un suono e resta inattiva quando c\'è silenzio. Dato che continua ad acquisire l\'audio, però, ti consigliamo di disattivarla quando non la usi.</string>
+    <string name="help_faq_battery_a">L\'app disegna solo quando c\'è un suono e resta inattiva quando c\'è silenzio. A schermo spento, per impostazione predefinita interrompe l\'acquisizione dell\'audio. Dato che continua ad acquisire l\'audio a schermo acceso, però, ti consigliamo di disattivarla quando non la usi.</string>
     <string name="help_faq_battery_less_drawing">Quando c\'è un suono, è il disegno della grafica a consumare più energia. Se attivi “Disegna la grafica meno spesso” in Batteria, in “Dettagliate” nella scheda Impostazioni, l\'app consuma meno, ma il movimento è meno fluido.</string>
     <string name="help_faq_language_q">Come cambio la lingua dell\'app?</string>
     <string name="help_faq_language_a">Tocca il pulsante a forma di globo in basso a destra nella scheda Home e scegli una lingua. “Predefinita di sistema” segue la lingua del telefono. Su Android 13 e versioni successive puoi cambiarla anche in “Lingue delle app” nelle impostazioni del telefono.</string>

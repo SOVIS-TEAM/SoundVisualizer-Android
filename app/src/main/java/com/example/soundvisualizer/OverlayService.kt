@@ -31,6 +31,7 @@ import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.example.soundvisualizer.language.AppLanguage
+import com.example.soundvisualizer.language.ProvideAppLayoutDirection
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class OverlayService : Service(), LifecycleOwner, ViewModelStoreOwner, SavedStateRegistryOwner {
@@ -132,7 +133,8 @@ class OverlayService : Service(), LifecycleOwner, ViewModelStoreOwner, SavedStat
             setViewTreeViewModelStoreOwner(this@OverlayService)
             setViewTreeSavedStateRegistryOwner(this@OverlayService)
             setContent {
-                VisualizerOverlay(covered)
+                // 개발자 HUD 는 Compose 배치라 앱 화면과 같은 좌우 방향을 준다(#489). 그림 자체는 절대 좌표다.
+                ProvideAppLayoutDirection { VisualizerOverlay(covered) }
             }
         }
         // 권한이 도중에 회수됐거나 시스템이 서비스를 되살린 경우 addView 가 BadTokenException 을
