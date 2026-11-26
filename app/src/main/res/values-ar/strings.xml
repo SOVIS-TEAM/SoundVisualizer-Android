@@ -367,6 +367,10 @@
     <string name="help_about_team">من تطوير فريق SOVIS</string>
     <string name="help_about_license">يتم توزيع هذا التطبيق بموجب Apache License 2.0. أسماء الأصوات ومجموعاتها في علامة تبويب «الأصوات» مبنية على أنطولوجيا AudioSet ومرخّصة بموجب CC BY-SA 4.0 (راجع «تراخيص البرامج المفتوحة المصدر» أدناه).</string>
     <string name="help_licenses_button">تراخيص البرامج المفتوحة المصدر</string>
+    <string name="help_update_button">التحقق من التحديثات</string>
+    <string name="help_update_checking">جارٍ التحقق من التحديثات…</string>
+    <string name="help_update_latest">أنت تستخدم أحدث إصدار.</string>
+    <string name="help_update_no_store">تعذّر فتح متجر تطبيقات أو متصفح.</string>
     <string name="help_licenses_title">تراخيص البرامج المفتوحة المصدر</string>
     <string name="help_privacy_button">سياسة الخصوصية</string>
     <string name="help_privacy_no_browser">لا يوجد متصفح لفتح الرابط. سياسة الخصوصية متاحة على %1$s.</string>

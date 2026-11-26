@@ -367,6 +367,10 @@
     <string name="help_about_team">สร้างโดยทีม SOVIS</string>
     <string name="help_about_license">แอปนี้เผยแพร่ภายใต้ Apache License 2.0 ชื่อและกลุ่มของเสียงในแท็บเสียงอิงจาก AudioSet Ontology และเผยแพร่ภายใต้ CC BY-SA 4.0 (ดู “ใบอนุญาตโอเพนซอร์ส” ด้านล่าง)</string>
     <string name="help_licenses_button">ใบอนุญาตโอเพนซอร์ส</string>
+    <string name="help_update_button">ตรวจหาอัปเดต</string>
+    <string name="help_update_checking">กำลังตรวจหาอัปเดต…</string>
+    <string name="help_update_latest">คุณใช้เวอร์ชันล่าสุดอยู่</string>
+    <string name="help_update_no_store">เปิดสโตร์แอปหรือเบราว์เซอร์ไม่ได้</string>
     <string name="help_licenses_title">ใบอนุญาตโอเพนซอร์ส</string>
     <string name="help_privacy_button">นโยบายความเป็นส่วนตัว</string>
     <string name="help_privacy_no_browser">ไม่มีเบราว์เซอร์สำหรับเปิดลิงก์ ดูนโยบายความเป็นส่วนตัวได้ที่ %1$s</string>

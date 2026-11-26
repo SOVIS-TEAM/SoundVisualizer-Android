@@ -215,6 +215,10 @@ dependencies {
     //noinspection NewerVersionAvailable
     implementation("com.microsoft.onnxruntime:onnxruntime-android:1.22.0")
 
+    // 도움말의 '업데이트 확인'(#500). Play 스토어에서 설치한 앱이 휴대폰의 Play 스토어 앱에 새 버전이 있는지 묻는다.
+    // 앱이 인터넷에 접속하지 않고 Play 스토어 앱과 기기 안에서 주고받으며, 권한을 더하지 않는다(InternetPermissionTest).
+    implementation("com.google.android.play:app-update:2.1.0")
+
     testImplementation("junit:junit:4.13.2")
     // Real org.json for JVM unit tests (the Android stub is not mocked by default)
     testImplementation("org.json:json:20260814")

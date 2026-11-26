@@ -411,6 +411,10 @@
     <string name="help_about_team">Made by team SOVIS</string>
     <string name="help_about_license">This app is distributed under the Apache License 2.0. The sound names and sound groups in the Sounds tab are based on the AudioSet Ontology and are licensed under CC BY-SA 4.0 (see “Open source licenses” below).</string>
     <string name="help_licenses_button">Open source licenses</string>
+    <string name="help_update_button">Check for updates</string>
+    <string name="help_update_checking">Checking for updates…</string>
+    <string name="help_update_latest">You\'re using the latest version.</string>
+    <string name="help_update_no_store">Couldn\'t open a store app or a browser.</string>
     <string name="help_licenses_title">Open source licenses</string>
     <string name="help_privacy_button">Privacy policy</string>
     <string name="help_privacy_no_browser">No browser to open the link. The privacy policy is at %1$s.</string>
