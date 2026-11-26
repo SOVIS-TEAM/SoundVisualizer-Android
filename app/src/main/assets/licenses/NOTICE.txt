@@ -58,7 +58,7 @@ https://creativecommons.org/licenses/by/4.0/
 ================================================================================
 3. Android Open Source Project (AndroidX, Jetpack Compose, Material Components)
 ================================================================================
-androidx.core, androidx.lifecycle, androidx.activity,
+androidx.core, androidx.lifecycle, androidx.activity, androidx.fragment,
 androidx.compose.* , androidx.compose.material3
 
 Copyright (C) The Android Open Source Project
