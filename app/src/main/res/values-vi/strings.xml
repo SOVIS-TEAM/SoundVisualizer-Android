@@ -367,6 +367,10 @@
     <string name="help_about_team">Phát triển bởi nhóm SOVIS</string>
     <string name="help_about_license">Ứng dụng này được phân phối theo Apache License 2.0. Tên và nhóm âm thanh trong thẻ Phân loại dựa trên AudioSet Ontology và được phân phối theo giấy phép CC BY-SA 4.0 (xem “Giấy phép nguồn mở” bên dưới).</string>
     <string name="help_licenses_button">Giấy phép nguồn mở</string>
+    <string name="help_update_button">Kiểm tra cập nhật</string>
+    <string name="help_update_checking">Đang kiểm tra cập nhật…</string>
+    <string name="help_update_latest">Bạn đang dùng phiên bản mới nhất.</string>
+    <string name="help_update_no_store">Không mở được cửa hàng ứng dụng hoặc trình duyệt.</string>
     <string name="help_licenses_title">Giấy phép nguồn mở</string>
     <string name="help_privacy_button">Chính sách quyền riêng tư</string>
     <string name="help_privacy_no_browser">Không có trình duyệt để mở liên kết. Chính sách quyền riêng tư có tại %1$s.</string>

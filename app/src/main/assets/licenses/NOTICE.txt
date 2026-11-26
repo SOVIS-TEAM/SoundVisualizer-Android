@@ -58,7 +58,7 @@ https://creativecommons.org/licenses/by/4.0/
 ================================================================================
 3. Android Open Source Project (AndroidX, Jetpack Compose, Material Components)
 ================================================================================
-androidx.core, androidx.lifecycle, androidx.activity,
+androidx.core, androidx.lifecycle, androidx.activity, androidx.fragment,
 androidx.compose.* , androidx.compose.material3
 
 Copyright (C) The Android Open Source Project
@@ -170,6 +170,24 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+================================================================================
+
+9. Google Play 인앱 업데이트 라이브러리 (#500)
+--------------------------------------------
+com.google.android.play:app-update, com.google.android.play:core-common
+Play 스토어에서 설치한 앱이 도움말의 '업데이트 확인'에서 휴대폰의 Play 스토어 앱에
+새 버전이 있는지 물을 때 씁니다. 이 라이브러리는 권한(인터넷 권한 포함)을 더하지 않습니다.
+
+Copyright (C) Google LLC
+Play Core Software Development Kit Terms of Service
+https://developer.android.com/guide/playcore/license
+
+com.google.android.gms:play-services-tasks, com.google.android.gms:play-services-basement
+(위 라이브러리가 함께 가져옵니다)
+Copyright (C) Google LLC
+Android Software Development Kit License
+https://developer.android.com/studio/terms.html
 
 ================================================================================
 
