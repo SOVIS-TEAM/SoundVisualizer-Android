@@ -2,7 +2,7 @@
 
 # SoundVisualizer 개인정보처리방침
 
-시행일: 2026년 11월 25일
+시행일: 2026년 11월 26일
 
 SoundVisualizer(이하 "앱")는 팀 SOVIS가 만든 Android 앱입니다. 이 방침은 앱이 어떤 정보를 다루는지 설명합니다.
 
@@ -43,11 +43,16 @@ SoundVisualizer(이하 "앱")는 팀 SOVIS가 만든 Android 앱입니다. 이 �
 - 앱 버전, Android 버전, 기기 모델, 앱 언어가 미리 채워집니다.
 - 보낼지는 사용자가 정합니다. 보낸 내용은 GitHub 또는 메일 서비스의 정책을 따르며, GitHub 이슈는 누구나 볼 수 있습니다.
 
-## 6. 방침의 변경
+## 6. 업데이트 확인
+
+- 도움말 탭의 '업데이트 확인'을 누르면, Play 스토어에서 설치한 경우 휴대폰의 Play 스토어 앱에 새 버전이 있는지 묻습니다. 앱이 직접 인터넷에 접속하지는 않으며, Play 스토어 앱이 주고받는 정보는 Google의 정책을 따릅니다.
+- 다른 곳에서 설치했다면 그 스토어(원스토어 또는 Play 스토어)의 앱 페이지를 열 뿐입니다.
+
+## 7. 방침의 변경
 
 이 방침이 바뀌면 이 페이지에 알리고 시행일을 고칩니다.
 
-## 7. 문의
+## 8. 문의
 
 - 팀 SOVIS
 - sovis.kr@gmail.com
@@ -58,7 +63,7 @@ SoundVisualizer(이하 "앱")는 팀 SOVIS가 만든 Android 앱입니다. 이 �
 
 # SoundVisualizer Privacy Policy
 
-Effective date: November 25, 2026
+Effective date: November 26, 2026
 
 SoundVisualizer (the "app") is an Android app made by team SOVIS. This policy explains what information the app handles.
 
@@ -99,11 +104,16 @@ The app **does not collect any personal information.**
 - The app version, Android version, device model and app language are filled in.
 - You decide whether to send it. What you send is covered by GitHub's or your email provider's policies, and GitHub issues are public.
 
-## 6. Changes to this policy
+## 6. Checking for updates
+
+- When you tap "Check for updates" in the Help tab and the app was installed from Google Play, the app asks the Play Store app on your phone whether a new version is available. The app itself does not connect to the internet; what the Play Store app exchanges is covered by Google's policies.
+- If the app was installed from elsewhere, it only opens the app's page in that store (ONE store or Google Play).
+
+## 7. Changes to this policy
 
 If this policy changes, we will update this page and its effective date.
 
-## 7. Contact
+## 8. Contact
 
 - Team SOVIS
 - sovis.kr@gmail.com
