@@ -137,6 +137,17 @@ class StringResourcesTest {
         assertTrue("strings.xml 이 없는 지원 언어 폴더: $missing", missing.isEmpty())
     }
 
+    @Test
+    fun `앱 이름은 띄어 쓰지 않고 SoundVisualizer 로 적는다`() {
+        // 홈 제목은 모든 언어에서 그대로 보인다. 예전에는 "Sound Visualizer" 로 띄어 써서 스토어·사이트·Windows 판과 달랐다(#498).
+        assertEquals("SoundVisualizer", defaults.strings.getValue("home_title").value)
+        val spaced = Regex("sound\\s+visuali[sz]er", RegexOption.IGNORE_CASE)
+        val problems = files.values.flatMap { file ->
+            file.strings.filterValues { spaced.containsMatchIn(it.value) }.keys.sorted().map { "${file.dir}: $it" }
+        }
+        assertTrue("앱 이름을 띄어 썼습니다. SoundVisualizer 로 적습니다:\n${problems.joinToString("\n")}", problems.isEmpty())
+    }
+
     /**
      * 한 폴더의 문구. strings.xml 과, 있으면 분류 탭의 소리 이름(sound_names.xml)을 함께 읽어
      * 소리 이름도 같은 규칙(한국어 누락, 없는 키, 따옴표 이스케이프)으로 검사한다.

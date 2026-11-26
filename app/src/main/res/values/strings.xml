@@ -9,7 +9,7 @@
     <string name="tab_help">Help</string>
 
     <!-- Home -->
-    <string name="home_title" translatable="false">Sound Visualizer</string>
+    <string name="home_title" translatable="false">SoundVisualizer</string>
     <string name="home_subtitle">Draws the sounds you can\'t see right on your screen.\nFrom gaming to movies, try a whole new experience.</string>
     <string name="home_status_running">Status: Running</string>
     <string name="home_status_idle">Status: Ready</string>
@@ -28,9 +28,9 @@
     <string name="home_stop">Stop</string>
     <string name="tile_add">Add to Quick Settings</string>
     <string name="tile_add_desc">Turn it on or off from the notification shade, right over your game or video.</string>
-    <string name="tile_add_manual">Pull down the notification shade, tap Edit (pencil) and add “Sound visualizer” to turn it on or off right over your game or video.</string>
+    <string name="tile_add_manual">Pull down the notification shade, tap Edit (pencil) and add “SoundVisualizer” to turn it on or off right over your game or video.</string>
     <string name="settings_tile_title">Turn on and off from the notification shade</string>
-    <string name="tile_added">“Sound visualizer” is in your Quick Settings in the notification shade.</string>
+    <string name="tile_added">“SoundVisualizer” is in your Quick Settings in the notification shade.</string>
     <string name="home_tutorial">View tutorial</string>
 
     <!-- Tutorial shown the first time the app opens, and again from Home -->
@@ -299,14 +299,14 @@
 
     <!-- Alert when the visualizer turns off without the user stopping it -->
     <string name="stopped_channel_name">Visualizer turned off</string>
-    <string name="stopped_channel_desc">Tells you when the sound visualizer turns off without you stopping it.</string>
-    <string name="stopped_title">Sound visualizer turned off</string>
+    <string name="stopped_channel_desc">Tells you when SoundVisualizer turns off without you stopping it.</string>
+    <string name="stopped_title">SoundVisualizer turned off</string>
     <string name="stopped_text_projection">Sound capture ended, so graphics and vibration alerts are off. This happens when screen recording, screen sharing or casting starts, or when the system stops sound capture. If another app is recording, sharing or casting, turning it on again ends it.</string>
     <string name="stopped_text_capture_error">Sound capture stopped because of an error, so graphics and vibration alerts are off.</string>
     <string name="stopped_text_start_failed">Sound capture couldn\'t start, so graphics and vibration alerts are off.</string>
     <string name="stopped_text_overlay_failed">Graphics couldn\'t be shown over other apps, so the visualizer turned off. Check that “Display over other apps” is allowed.</string>
     <string name="stopped_turn_on">Turn on again</string>
-    <string name="stopped_toast">Sound visualizer turned off. Graphics and vibration alerts are off.</string>
+    <string name="stopped_toast">SoundVisualizer turned off. Graphics and vibration alerts are off.</string>
 
     <!-- 잠금 화면의 위협음 알림(#310) -->
     <string name="danger_alert_channel_name">Danger sound alerts</string>
@@ -316,7 +316,7 @@
     <string name="danger_alert_text">Check your surroundings.</string>
 
     <!-- Quick Settings tile -->
-    <string name="tile_label">Sound visualizer</string>
+    <string name="tile_label">SoundVisualizer</string>
     <string name="tile_state_on">On</string>
     <string name="tile_state_off">Off</string>
     <string name="tile_overlay_permission_needed">“Display over other apps” permission is required. Tap “Start” in the app to allow it.</string>
@@ -330,9 +330,9 @@
     <string name="help_start_4">To turn it off, tap “Stop” on Home or in the notification.</string>
 
     <string name="help_tile_title">Turn on and off from the notification shade</string>
-    <string name="help_tile_body">Tap “Add to Quick Settings” in the Settings tab to add a “Sound visualizer” button to your notification shade. You can then turn it on or off right over your game or video without switching apps.</string>
+    <string name="help_tile_body">Tap “Add to Quick Settings” in the Settings tab to add a “SoundVisualizer” button to your notification shade. You can then turn it on or off right over your game or video without switching apps.</string>
     <string name="help_tile_use">Tap to turn it on, and tap again to turn it off. Long-press to open this app\'s settings.</string>
-    <string name="help_tile_old">On Android 12 and earlier, open the notification shade, tap Edit (pencil) and drag “Sound visualizer” in yourself.</string>
+    <string name="help_tile_old">On Android 12 and earlier, open the notification shade, tap Edit (pencil) and drag “SoundVisualizer” in yourself.</string>
 
     <string name="help_permissions_title">Why permissions are needed</string>
     <string name="help_perm_overlay">Display over other apps</string>
