@@ -35,13 +35,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -59,6 +62,7 @@ import com.example.soundvisualizer.SecondaryTextColor
 import com.example.soundvisualizer.SettingsExpander
 import com.example.soundvisualizer.SettingsManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 private val BodySize = 15.sp
@@ -187,11 +191,12 @@ fun HelpTab() {
                     Text(stringResource(R.string.help_about_team), fontSize = BodySize, color = PrimaryTextColor)
                     Text(stringResource(R.string.help_about_license), fontSize = 14.sp, lineHeight = 21.sp, color = SecondaryTextColor)
                 }
+                UpdateButton()
                 OutlinedButton(
                     onClick = { showLicenses = true },
                     border = BorderStroke(1.dp, AccentColor),
                     shape = RoundedCornerShape(14.dp),
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp).heightIn(min = 48.dp)
+                    modifier = Modifier.fillMaxWidth().padding(top = 10.dp).heightIn(min = 48.dp)
                 ) {
                     Text(stringResource(R.string.help_licenses_button), fontSize = 15.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = AccentColor)
                 }
@@ -206,6 +211,73 @@ fun HelpTab() {
     if (showLicenses) {
         LicenseDialog(onDismiss = { showLicenses = false })
     }
+}
+
+/**
+ * 업데이트 확인(#500). 앱에는 인터넷 권한이 없어 직접 묻지 않는다. Play 스토어에서 설치했으면 휴대폰의 Play 스토어 앱에
+ * 새 버전이 있는지 묻고, 최신이면 그렇다고 알린다. 새 버전이 있거나 묻지 못하면, 그리고 다른 곳에서 설치했으면 그 스토어의
+ * 앱 페이지를 연다([UpdateStore]). 스토어 페이지에서 업데이트 버튼을 누르는 것은 사용자다.
+ */
+@Composable
+private fun UpdateButton() {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val store = remember(context) { UpdateStore.of(UpdateCheck.installer(context)) }
+    var checking by remember { mutableStateOf(false) }
+    var latest by rememberSaveable { mutableStateOf(false) }
+    val noStore = stringResource(R.string.help_update_no_store)
+
+    OutlinedButton(
+        onClick = {
+            latest = false
+            val links = UpdateLinks.forStore(store, context.packageName)
+            if (store != UpdateStore.Play) {
+                openStore(context, links, noStore)
+                return@OutlinedButton
+            }
+            checking = true
+            scope.launch {
+                val hasUpdate = UpdateCheck.playHasUpdate(context)
+                checking = false
+                if (hasUpdate == false) latest = true else openStore(context, links, noStore)
+            }
+        },
+        enabled = !checking,
+        border = BorderStroke(1.dp, AccentColor),
+        shape = RoundedCornerShape(14.dp),
+        modifier = Modifier.fillMaxWidth().padding(top = 16.dp).heightIn(min = 48.dp)
+    ) {
+        Text(
+            stringResource(if (checking) R.string.help_update_checking else R.string.help_update_button),
+            fontSize = 15.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, color = AccentColor
+        )
+    }
+    if (latest) {
+        // 누른 결과라 화면 읽어주기가 읽고 지나가게 한다.
+        Text(
+            stringResource(R.string.help_update_latest),
+            fontSize = 14.sp, lineHeight = 21.sp, color = SecondaryTextColor,
+            modifier = Modifier.padding(top = 8.dp).semantics { liveRegion = LiveRegionMode.Polite }
+        )
+    }
+}
+
+/** 스토어 페이지를 연다. Play 주소는 Play 스토어 앱으로 열고, 그 앱이 없으면 브라우저로 연다. 둘 다 안 되면 알린다. */
+private fun openStore(context: Context, links: UpdateLinks, noStore: String) {
+    fun open(url: String): Boolean {
+        val intent = Intent(Intent.ACTION_VIEW, url.toUri()).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        // market:// 은 다른 마켓 앱도 받을 수 있어 고르는 창이 뜬다. Play 스토어 앱으로 바로 연다.
+        if (url.startsWith("market://")) intent.setPackage(UpdateStore.PLAY_STORE_PACKAGE)
+        return try {
+            context.startActivity(intent)
+            true
+        } catch (e: ActivityNotFoundException) {
+            false
+        }
+    }
+    if (open(links.primary)) return
+    if (links.fallback != null && open(links.fallback)) return
+    Toast.makeText(context, noStore, Toast.LENGTH_LONG).show()
 }
 
 /**

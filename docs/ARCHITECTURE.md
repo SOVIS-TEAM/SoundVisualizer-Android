@@ -875,3 +875,16 @@ App Bundle로 배포하더라도 앱 안에서 고른 언어의 문구가 빠지
 - **기기 정보 복사**: 브라우저나 메일 앱이 없을 때의 대안입니다. Android 13부터는 시스템이 복사 안내를 직접 띄우므로 그 아래 버전에서만 토스트를 띄웁니다.
 - 앱은 주소만 넘기고 여는 것은 브라우저·메일 앱이라 **인터넷 권한이 없습니다.** 열 앱이 없으면(`ActivityNotFoundException`) 죽지 않고 토스트로 안내합니다.
 - 주소 만들기(인코딩, 본문 합치기, 빈 값 처리)는 `ReportLinkTest`가 기기 없이 검사합니다.
+
+### 업데이트 확인 (`help/UpdateStore`, `help/UpdateCheck`, #500)
+
+도움말 탭 **앱 정보** 카드의 **업데이트 확인** 버튼입니다. 인터넷 권한 없이 동작합니다.
+
+- **어디서 설치했는지**(`PackageManager.getInstallSourceInfo().installingPackageName`)로 갈 곳을 정합니다(`UpdateStore.of`).
+  - Play 스토어(`com.android.vending`): Play 인앱 업데이트 라이브러리(`com.google.android.play:app-update`)로 기기 안의 Play 스토어 앱에 새 버전이 있는지 묻습니다. 최신이면 카드에 "최신 버전을 쓰고 있습니다"를 보이고(화면 읽어주기가 읽습니다), 새 버전이 있거나 묻지 못하면 Play 스토어의 앱 페이지를 엽니다.
+  - 원스토어(원스토어 앱·서비스, 예전 통신사 마켓): 원스토어의 앱 페이지를 엽니다. 다른 스토어로 보내지 않습니다.
+  - 그 밖(GitHub APK, 다른 마켓, adb): Play 스토어의 앱 페이지를 엽니다. 같은 팀 키로 서명해 Play 판이 그 위에 설치됩니다.
+- Play 주소는 `market://`에 Play 스토어 패키지를 정해 열고(다른 마켓 앱이 고르는 창에 끼지 않게), Play 스토어 앱이 없으면 `https://play.google.com/…`을 브라우저로 엽니다. 둘 다 열 수 없으면 토스트로 알립니다.
+- 앱이 직접 내려받거나 설치하지 않습니다. 스토어 페이지에서 업데이트 버튼을 누르는 것은 사용자입니다.
+- 라이브러리는 권한을 더하지 않습니다(라이브러리 매니페스트와 만든 APK 의 `aapt2 dump permissions`로 확인). `InternetPermissionTest`가 매니페스트의 네트워크 권한을 막습니다. 라이브러리 고지는 NOTICE 9번입니다.
+- 스토어 고르기와 주소는 `UpdateStoreTest`가 기기 없이 검사합니다.

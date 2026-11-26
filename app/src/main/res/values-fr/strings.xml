@@ -367,6 +367,10 @@
     <string name="help_about_team">Créé par l\'équipe SOVIS</string>
     <string name="help_about_license">Cette application est distribuée sous l\'Apache License 2.0. Les noms et les groupes de sons de l\'onglet Sons sont basés sur l\'ontologie AudioSet et distribués sous la licence CC BY-SA 4.0 (voir « Licences open source » ci-dessous).</string>
     <string name="help_licenses_button">Licences open source</string>
+    <string name="help_update_button">Rechercher les mises à jour</string>
+    <string name="help_update_checking">Recherche de mises à jour…</string>
+    <string name="help_update_latest">Vous utilisez la dernière version.</string>
+    <string name="help_update_no_store">Impossible d\'ouvrir une boutique d\'applications ou un navigateur.</string>
     <string name="help_licenses_title">Licences open source</string>
     <string name="help_privacy_button">Politique de confidentialité</string>
     <string name="help_privacy_no_browser">Aucun navigateur pour ouvrir le lien. La politique de confidentialité se trouve sur %1$s.</string>

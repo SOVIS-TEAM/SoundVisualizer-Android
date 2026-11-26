@@ -25,8 +25,8 @@ android {
         // 37(Android 17)에서 이 앱에 걸리는 변경은 백그라운드 액티비티 시작(BAL) 조이기뿐이었다. 타일·알림 본문·
         // "다시 켜기" 로 여는 경로가 모두 BAL_ALLOW_NON_APP_VISIBLE_WINDOW 로 허용되는 것을 Android 17 에서 봤다(#155).
         targetSdk = 37
-        versionCode = 21
-        versionName = "1.9.2"
+        versionCode = 22
+        versionName = "1.10.0"
         buildConfigField("boolean", "AI_SILERO_PREVIEW_ENABLED",
             providers.gradleProperty("aiSileroPreview").map {
                 require(it == "true" || it == "false") { "aiSileroPreview must be true or false" }
@@ -214,6 +214,13 @@ dependencies {
     // 여기서만 끈다. 다른 의존성의 알림은 살아 있어야 하므로 검사 자체를 끄지는 않는다(#154).
     //noinspection NewerVersionAvailable
     implementation("com.microsoft.onnxruntime:onnxruntime-android:1.22.0")
+
+    // 도움말의 '업데이트 확인'(#500). Play 스토어에서 설치한 앱이 휴대폰의 Play 스토어 앱에 새 버전이 있는지 묻는다.
+    // 앱이 인터넷에 접속하지 않고 Play 스토어 앱과 기기 안에서 주고받으며, 권한을 더하지 않는다(InternetPermissionTest).
+    implementation("com.google.android.play:app-update:2.1.0")
+    // app-update 가 끌고 오는 play-services-basement 는 androidx.fragment 1.0.0 을 가져온다. fragment 가 1.3.0 보다 낮으면
+    // registerForActivityResult 가 틀리게 동작할 수 있어 릴리스 lint 가 막는다(InvalidFragmentVersionForActivityResult). 새 판으로 올려 둔다.
+    implementation("androidx.fragment:fragment:1.9.1")
 
     testImplementation("junit:junit:4.13.2")
     // Real org.json for JVM unit tests (the Android stub is not mocked by default)
